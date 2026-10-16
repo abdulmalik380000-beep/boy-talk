@@ -1,0 +1,2877 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#6c5ce7" />
+<meta name="description" content="Boy Talk – Kids Learning App. Fun, safe learning videos, flashcards and quizzes for children." />
+<title>Boy Talk – Kids Learning App</title>
+<style>
+/* =========================================================================
+   BOY TALK – KIDS LEARNING APP
+   Premium single-file kids learning app (HTML + CSS + JS)
+   Package name suggestion: com.boytalk.kidslearning
+   ========================================================================= */
+
+/* ============================ THEME TOKENS ============================ */
+:root{
+  --bg:#eef1ff;
+  --bg-grad-1:#e6eaff;
+  --bg-grad-2:#fff2f8;
+  --surface:#ffffff;
+  --surface-2:#f7f8ff;
+  --surface-3:#eef1ff;
+  --text:#161a3a;
+  --muted:#6a7095;
+  --line:#e6e9fb;
+  --primary:#6c5ce7;
+  --primary-2:#a29bfe;
+  --pink:#ff6b9d;
+  --yellow:#ffc93c;
+  --green:#00d2a8;
+  --blue:#4fc3f7;
+  --orange:#ff9f43;
+  --red:#ff5c5c;
+  --shadow:0 10px 24px rgba(35,40,90,.10);
+  --shadow-3d:0 6px 0 rgba(108,92,231,.16), 0 12px 22px rgba(35,40,90,.12);
+  --nav-bg:rgba(255,255,255,.88);
+  --radius:22px;
+  --radius-sm:14px;
+}
+html[data-theme="dark"]{
+  --bg:#0e1120;
+  --bg-grad-1:#161a38;
+  --bg-grad-2:#1e1230;
+  --surface:#181c33;
+  --surface-2:#1f2440;
+  --surface-3:#232848;
+  --text:#eef1ff;
+  --muted:#a2a9d0;
+  --line:#272c4a;
+  --shadow:0 10px 24px rgba(0,0,0,.45);
+  --shadow-3d:0 6px 0 rgba(0,0,0,.4), 0 12px 22px rgba(0,0,0,.45);
+  --nav-bg:rgba(24,28,51,.92);
+}
+
+/* ============================== RESET ================================= */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,'Noto Naskh Arabic','Noto Sans',sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(1100px 520px at 8% -12%, var(--bg-grad-2), transparent 62%),
+    radial-gradient(900px 480px at 108% -4%, var(--bg-grad-1), transparent 58%),
+    var(--bg);
+  background-attachment:fixed;
+  overflow-x:hidden;
+  transition:background .35s ease,color .35s ease;
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit;}
+button{cursor:pointer;border:none;background:none;}
+img{display:block;max-width:100%;}
+::-webkit-scrollbar{width:0;height:0;}
+
+/* ============================ APP SHELL =============================== */
+#app{
+  max-width:520px;
+  margin:0 auto;
+  min-height:100%;
+  position:relative;
+  padding-bottom:calc(104px + env(safe-area-inset-bottom));
+}
+
+/* ============================= TOP BAR ================================ */
+.topbar{
+  position:sticky;top:0;z-index:60;
+  padding:calc(env(safe-area-inset-top) + 14px) 16px 16px;
+  background:linear-gradient(135deg,#6c5ce7 0%,#8f7bf5 45%,#ff6b9d 100%);
+  border-radius:0 0 28px 28px;
+  box-shadow:0 12px 30px rgba(108,92,231,.35);
+  display:flex;align-items:center;gap:12px;
+  transition:border-radius .3s;
+}
+.topbar .brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0;}
+.avatar{
+  width:46px;height:46px;flex:0 0 46px;border-radius:16px;
+  background:linear-gradient(145deg,#ffc93c,#ff9f43);
+  display:grid;place-items:center;font-size:24px;
+  box-shadow:0 6px 0 rgba(0,0,0,.16), 0 10px 18px rgba(0,0,0,.2);
+  transform:translateZ(0);
+}
+.brand-txt{min-width:0;}
+.brand-txt .hello{font-size:12px;color:rgba(255,255,255,.82);font-weight:600;letter-spacing:.3px;}
+.brand-txt h1{
+  font-size:17px;color:#fff;font-weight:800;letter-spacing:.2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.icon-btn{
+  width:42px;height:42px;border-radius:14px;
+  background:rgba(255,255,255,.2);
+  backdrop-filter:blur(8px);
+  display:grid;place-items:center;
+  color:#fff;font-size:18px;
+  border:1px solid rgba(255,255,255,.25);
+  transition:transform .18s ease,background .2s;
+}
+.icon-btn:active{transform:scale(.9);background:rgba(255,255,255,.32);}
+
+/* ============================ SCREENS ================================= */
+.screen{display:none;padding:16px 16px 8px;}
+.screen.active{display:block;animation:screenIn .38s cubic-bezier(.22,1,.36,1);}
+@keyframes screenIn{
+  from{opacity:0;transform:translateY(14px) scale(.99);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
+
+/* ============================ SECTION TITLES ========================== */
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin:22px 0 12px;}
+.sec-head h2{font-size:17px;font-weight:800;letter-spacing:.2px;display:flex;align-items:center;gap:8px;}
+.sec-head h2 .dot{width:8px;height:8px;border-radius:50%;background:var(--pink);box-shadow:0 0 0 4px rgba(255,107,157,.18);}
+.sec-head .link{
+  font-size:12.5px;font-weight:700;color:var(--primary);
+  background:var(--surface);padding:7px 13px;border-radius:999px;
+  box-shadow:var(--shadow);transition:transform .16s;
+}
+.sec-head .link:active{transform:scale(.94);}
+
+/* ============================== HERO ================================== */
+.hero{
+  position:relative;overflow:hidden;
+  border-radius:28px;
+  padding:22px 20px 20px;
+  background:linear-gradient(140deg,#6c5ce7 0%,#8f7bf5 50%,#4fc3f7 100%);
+  box-shadow:0 12px 0 rgba(108,92,231,.22), 0 22px 34px rgba(35,40,90,.22);
+  color:#fff;
+}
+.hero::before{
+  content:"";position:absolute;width:190px;height:190px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.35),transparent 68%);
+  top:-80px;right:-60px;
+}
+.hero::after{
+  content:"";position:absolute;width:130px;height:130px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,201,60,.5),transparent 70%);
+  bottom:-70px;left:-30px;
+}
+.hero-inner{position:relative;z-index:2;}
+.hero .tag{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;
+  background:rgba(255,255,255,.22);padding:6px 12px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.3);
+}
+.hero h2{font-size:22px;font-weight:800;margin:12px 0 6px;line-height:1.25;}
+.hero p{font-size:13px;opacity:.92;line-height:1.5;max-width:88%;}
+.hero-emoji{
+  position:absolute;right:14px;bottom:12px;z-index:1;
+  font-size:56px;filter:drop-shadow(0 8px 12px rgba(0,0,0,.25));
+  animation:float 4s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-4deg);}50%{transform:translateY(-12px) rotate(4deg);}}
+
+.btn-primary{
+  margin-top:16px;
+  display:inline-flex;align-items:center;gap:8px;
+  background:#fff;color:#5b4bd6;font-weight:800;font-size:14px;
+  padding:13px 22px;border-radius:999px;
+  box-shadow:0 6px 0 rgba(0,0,0,.18), 0 12px 20px rgba(0,0,0,.18);
+  transition:transform .16s ease;
+}
+.btn-primary:active{transform:translateY(3px) scale(.98);box-shadow:0 3px 0 rgba(0,0,0,.18);}
+
+/* =========================== SEARCH BAR =============================== */
+.search-wrap{position:relative;margin-top:16px;}
+.search-wrap .s-ico{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:16px;opacity:.6;}
+.search-wrap input{
+  width:100%;padding:15px 16px 15px 44px;border-radius:18px;
+  background:var(--surface);border:1.5px solid var(--line);
+  box-shadow:var(--shadow);font-size:14px;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.search-wrap input:focus{border-color:var(--primary-2);box-shadow:0 0 0 4px rgba(108,92,231,.12);}
+.search-wrap input::placeholder{color:var(--muted);}
+
+/* ========================= DAILY GOAL CARD ============================ */
+.goal-card{
+  margin-top:16px;background:var(--surface);border-radius:24px;padding:18px;
+  box-shadow:var(--shadow);display:flex;align-items:center;gap:16px;
+  border:1.5px solid var(--line);
+}
+.ring{
+  --p:0;
+  width:66px;height:66px;flex:0 0 66px;border-radius:50%;
+  background:conic-gradient(var(--green) calc(var(--p)*1%), var(--surface-3) 0);
+  display:grid;place-items:center;position:relative;
+  box-shadow:inset 0 0 0 1px var(--line);
+}
+.ring::after{
+  content:"";position:absolute;inset:7px;border-radius:50%;background:var(--surface);
+}
+.ring span{position:relative;z-index:2;font-weight:800;font-size:15px;}
+.goal-txt{flex:1;min-width:0;}
+.goal-txt h4{font-size:14.5px;font-weight:800;margin-bottom:4px;}
+.goal-txt p{font-size:12.5px;color:var(--muted);line-height:1.45;}
+
+/* =========================== H-SCROLL ROWS ============================ */
+.hscroll{
+  display:flex;gap:12px;overflow-x:auto;padding:4px 16px 8px;
+  margin:0 -16px;scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+}
+.hscroll::-webkit-scrollbar{display:none;}
+.hscroll > *{scroll-snap-align:start;flex:0 0 auto;}
+
+/* =========================== VIDEO CARDS ============================== */
+.v-card{
+  width:186px;background:var(--surface);border-radius:20px;overflow:hidden;
+  box-shadow:var(--shadow-3d);border:1.5px solid var(--line);
+  transition:transform .18s cubic-bezier(.22,1,.36,1);
+  position:relative;
+}
+.v-card:active{transform:translateY(3px) scale(.98);}
+.v-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.v-grid .v-card{width:100%;}
+.v-thumb{position:relative;aspect-ratio:16/10;background:linear-gradient(135deg,#6c5ce7,#a29bfe);overflow:hidden;}
+.v-thumb img{width:100%;height:100%;object-fit:cover;}
+.v-thumb img.img-fail{display:none;}
+.v-thumb .fallback{
+  position:absolute;inset:0;display:grid;place-items:center;font-size:34px;
+  background:linear-gradient(135deg,#6c5ce7,#ff6b9d);
+}
+.v-dur{
+  position:absolute;right:8px;bottom:8px;font-size:10.5px;font-weight:800;
+  background:rgba(0,0,0,.72);color:#fff;padding:3px 7px;border-radius:8px;
+  backdrop-filter:blur(4px);
+}
+.v-cat{
+  position:absolute;left:8px;top:8px;font-size:15px;
+  background:rgba(255,255,255,.92);padding:5px 8px;border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,.18);
+}
+.v-fav{
+  position:absolute;right:8px;top:8px;width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,.92);display:grid;place-items:center;font-size:15px;
+  color:#c9cee8;box-shadow:0 4px 10px rgba(0,0,0,.18);transition:transform .16s,color .2s;
+}
+.v-fav.on{color:#ff4d88;}
+.v-fav:active{transform:scale(.85);}
+.v-prog{position:absolute;left:0;right:0;bottom:0;height:5px;background:rgba(0,0,0,.28);}
+.v-prog i{display:block;height:100%;background:linear-gradient(90deg,#00d2a8,#4fc3f7);border-radius:0 4px 4px 0;}
+.v-body{padding:11px 12px 13px;}
+.v-body h4{
+  font-size:12.8px;font-weight:700;line-height:1.35;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  min-height:34px;
+}
+.v-body p{font-size:10.5px;color:var(--muted);margin-top:5px;font-weight:600;display:flex;align-items:center;gap:5px;}
+
+/* ========================= CATEGORY CARDS ============================= */
+.cat-scroll .cat-chip{
+  width:104px;padding:14px 10px;border-radius:20px;
+  background:var(--surface);border:1.5px solid var(--line);
+  box-shadow:var(--shadow-3d);
+  display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;
+  transition:transform .18s;
+}
+.cat-chip:active{transform:translateY(3px) scale(.97);}
+.cat-chip .cico{
+  width:48px;height:48px;border-radius:16px;display:grid;place-items:center;font-size:24px;
+  box-shadow:0 5px 0 rgba(0,0,0,.10);
+}
+.cat-chip span{font-size:11px;font-weight:700;line-height:1.3;}
+
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+.cat-card{
+  border-radius:22px;padding:16px 14px;color:#fff;position:relative;overflow:hidden;
+  box-shadow:0 7px 0 rgba(0,0,0,.14), 0 14px 22px rgba(35,40,90,.16);
+  transition:transform .18s;min-height:104px;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.cat-card:active{transform:translateY(4px) scale(.98);box-shadow:0 3px 0 rgba(0,0,0,.14);}
+.cat-card::after{
+  content:"";position:absolute;width:90px;height:90px;border-radius:50%;
+  background:rgba(255,255,255,.16);right:-30px;top:-34px;
+}
+.cat-card .ci{font-size:30px;position:relative;z-index:2;}
+.cat-card h4{font-size:13.5px;font-weight:800;line-height:1.25;position:relative;z-index:2;}
+.cat-card small{font-size:10.5px;opacity:.88;font-weight:600;position:relative;z-index:2;}
+
+/* ============================ FLASHCARDS ============================== */
+.tabs{display:flex;gap:8px;background:var(--surface-3);padding:5px;border-radius:16px;margin-bottom:14px;}
+.tab{
+  flex:1;padding:11px 8px;border-radius:12px;font-size:12.5px;font-weight:700;
+  color:var(--muted);transition:all .22s;
+}
+.tab.active{background:var(--surface);color:var(--primary);box-shadow:var(--shadow);}
+
+.flash-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.flash{
+  border-radius:18px;padding:14px 6px;text-align:center;
+  background:var(--surface);border:1.5px solid var(--line);
+  box-shadow:var(--shadow-3d);transition:transform .16s;
+}
+.flash:active{transform:translateY(3px) scale(.96);}
+.flash .big{font-size:24px;font-weight:800;line-height:1.1;}
+.flash .sub{font-size:10.5px;color:var(--muted);margin-top:5px;font-weight:600;line-height:1.3;}
+
+/* ============================== QUIZ ================================== */
+.quiz-card{
+  background:var(--surface);border-radius:22px;padding:16px;margin-bottom:12px;
+  box-shadow:var(--shadow);border:1.5px solid var(--line);
+  display:flex;align-items:center;gap:14px;
+}
+.quiz-card .qi{
+  width:52px;height:52px;flex:0 0 52px;border-radius:16px;display:grid;place-items:center;
+  font-size:24px;box-shadow:0 5px 0 rgba(0,0,0,.10);
+}
+.quiz-card .qt{flex:1;min-width:0;}
+.quiz-card h4{font-size:13.5px;font-weight:800;}
+.quiz-card p{font-size:11.5px;color:var(--muted);margin-top:3px;}
+.quiz-card .go{
+  background:var(--primary);color:#fff;font-size:12px;font-weight:800;
+  padding:9px 15px;border-radius:999px;box-shadow:0 4px 0 rgba(108,92,231,.4);
+}
+.quiz-card .go:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(108,92,231,.4);}
+
+.q-option{
+  display:flex;align-items:center;gap:12px;width:100%;text-align:left;
+  background:var(--surface-2);border:2px solid var(--line);border-radius:16px;
+  padding:15px 16px;margin-bottom:10px;font-size:14px;font-weight:600;
+  transition:all .2s;
+}
+.q-option .k{
+  width:28px;height:28px;flex:0 0 28px;border-radius:9px;background:var(--surface);
+  display:grid;place-items:center;font-size:12px;font-weight:800;color:var(--muted);
+  box-shadow:var(--shadow);
+}
+.q-option.correct{background:rgba(0,210,168,.14);border-color:var(--green);}
+.q-option.correct .k{background:var(--green);color:#fff;}
+.q-option.wrong{background:rgba(255,92,92,.12);border-color:var(--red);}
+.q-option.wrong .k{background:var(--red);color:#fff;}
+.q-option:disabled{cursor:default;}
+
+/* ============================ LIST ITEMS ============================== */
+.list-row{
+  display:flex;align-items:center;gap:13px;padding:13px 15px;border-radius:18px;
+  background:var(--surface);border:1.5px solid var(--line);margin-bottom:10px;
+  box-shadow:var(--shadow);transition:transform .16s;
+}
+.list-row:active{transform:scale(.985);}
+.list-row .li{
+  width:44px;height:44px;flex:0 0 44px;border-radius:14px;display:grid;place-items:center;font-size:20px;
+  background:var(--surface-3);
+}
+.list-row .lt{flex:1;min-width:0;}
+.list-row .lt h4{font-size:13.5px;font-weight:700;}
+.list-row .lt p{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.4;}
+.list-row .chev{color:var(--muted);font-size:18px;}
+
+/* ============================ SETTINGS ================================ */
+.setting{
+  display:flex;align-items:center;gap:13px;padding:15px;
+  background:var(--surface);border:1.5px solid var(--line);border-radius:18px;margin-bottom:10px;
+  box-shadow:var(--shadow);
+}
+.setting .st{flex:1;min-width:0;}
+.setting .st h4{font-size:13.5px;font-weight:700;}
+.setting .st p{font-size:11.5px;color:var(--muted);margin-top:3px;}
+.switch{
+  width:52px;height:30px;border-radius:999px;background:var(--surface-3);
+  position:relative;flex:0 0 52px;transition:background .25s;border:1.5px solid var(--line);
+}
+.switch::after{
+  content:"";position:absolute;width:22px;height:22px;border-radius:50%;background:#fff;
+  top:2.5px;left:3px;transition:left .25s cubic-bezier(.22,1,.36,1);
+  box-shadow:0 2px 6px rgba(0,0,0,.25);
+}
+.switch.on{background:linear-gradient(135deg,#6c5ce7,#a29bfe);border-color:transparent;}
+.switch.on::after{left:26px;}
+
+/* ============================= BUTTONS ================================ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:14px 20px;border-radius:16px;font-size:14px;font-weight:800;
+  background:var(--surface-3);color:var(--text);transition:transform .16s;
+  border:1.5px solid var(--line);width:100%;
+}
+.btn:active{transform:translateY(2px) scale(.99);}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.btn-grad{
+  background:linear-gradient(135deg,#6c5ce7,#a29bfe);color:#fff;border:none;
+  box-shadow:0 6px 0 rgba(108,92,231,.35);
+}
+.btn-grad:active{box-shadow:0 3px 0 rgba(108,92,231,.35);}
+.btn-green{background:linear-gradient(135deg,#00d2a8,#4fc3f7);color:#fff;border:none;box-shadow:0 6px 0 rgba(0,180,160,.32);}
+.btn-red{background:linear-gradient(135deg,#ff5c5c,#ff6b9d);color:#fff;border:none;box-shadow:0 6px 0 rgba(255,92,92,.3);}
+.btn-sm{padding:10px 16px;font-size:12.5px;border-radius:13px;width:auto;}
+
+/* ============================== FORMS ================================= */
+.field{margin-bottom:13px;}
+.field label{display:block;font-size:12px;font-weight:800;margin-bottom:6px;color:var(--muted);letter-spacing:.2px;}
+.field input,.field select,.field textarea{
+  width:100%;padding:13px 15px;border-radius:15px;background:var(--surface-2);
+  border:1.5px solid var(--line);outline:none;font-size:13.5px;
+  transition:border-color .2s,box-shadow .2s;
+}
+.field textarea{min-height:92px;resize:vertical;line-height:1.5;}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:var(--primary-2);box-shadow:0 0 0 4px rgba(108,92,231,.12);
+}
+.field .hint{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.45;}
+.check-row{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--surface-2);border-radius:15px;border:1.5px solid var(--line);}
+.check-row input{width:20px;height:20px;accent-color:var(--primary);}
+.check-row span{font-size:13px;font-weight:700;}
+
+/* ============================== MODALS ================================ */
+.modal{
+  position:fixed;inset:0;z-index:300;display:none;
+  align-items:flex-end;justify-content:center;
+  background:rgba(12,14,32,.62);backdrop-filter:blur(6px);
+}
+.modal.open{display:flex;animation:fadeIn .25s ease;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+.sheet{
+  width:100%;max-width:520px;max-height:92vh;overflow-y:auto;
+  background:var(--surface);border-radius:28px 28px 0 0;
+  padding:8px 18px calc(26px + env(safe-area-inset-bottom));
+  animation:sheetUp .35s cubic-bezier(.22,1,.36,1);
+}
+@keyframes sheetUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.sheet-grip{width:44px;height:5px;border-radius:99px;background:var(--line);margin:10px auto 16px;}
+.sheet h3{font-size:17px;font-weight:800;margin-bottom:4px;}
+.sheet .sub{font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.5;}
+
+/* Full-screen player */
+.modal-player{align-items:stretch;background:#05060f;}
+.player-wrap{
+  width:100%;max-width:520px;margin:0 auto;display:flex;flex-direction:column;
+  height:100%;padding-top:env(safe-area-inset-top);
+}
+.player-head{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;color:#fff;
+}
+.player-head .icon-btn{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.18);}
+.player-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000;}
+.player-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+.player-info{padding:16px 18px;color:#fff;flex:1;overflow-y:auto;}
+.player-info h3{font-size:16px;font-weight:800;line-height:1.4;}
+.player-info .meta{font-size:12px;opacity:.7;margin-top:7px;display:flex;gap:10px;flex-wrap:wrap;}
+.player-actions{display:flex;gap:9px;margin-top:15px;flex-wrap:wrap;}
+.pa{
+  padding:10px 15px;border-radius:13px;background:rgba(255,255,255,.12);
+  color:#fff;font-size:12.5px;font-weight:700;display:inline-flex;align-items:center;gap:6px;
+  border:1px solid rgba(255,255,255,.14);transition:transform .16s,background .2s;
+}
+.pa:active{transform:scale(.94);background:rgba(255,255,255,.22);}
+.pa.on{background:linear-gradient(135deg,#ff6b9d,#ff9f43);border-color:transparent;}
+.related-title{font-size:13px;font-weight:800;margin:20px 0 10px;opacity:.85;}
+.related-list{display:flex;flex-direction:column;gap:9px;}
+.rel-item{
+  display:flex;gap:11px;padding:8px;border-radius:15px;background:rgba(255,255,255,.07);
+  transition:background .2s;align-items:center;
+}
+.rel-item:active{background:rgba(255,255,255,.16);}
+.rel-item .rt{
+  width:82px;height:48px;flex:0 0 82px;border-radius:11px;overflow:hidden;
+  background:linear-gradient(135deg,#6c5ce7,#ff6b9d);display:grid;place-items:center;font-size:20px;
+}
+.rel-item .rt img{width:100%;height:100%;object-fit:cover;}
+.rel-item .rn{flex:1;min-width:0;}
+.rel-item .rn h5{font-size:12px;font-weight:700;line-height:1.35;color:#fff;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.rel-item .rn p{font-size:10.5px;opacity:.6;margin-top:3px;color:#fff;}
+
+/* ============================== TOAST ================================= */
+#toast{
+  position:fixed;left:50%;bottom:calc(112px + env(safe-area-inset-bottom));
+  transform:translate(-50%,24px);z-index:500;
+  background:#161a3a;color:#fff;padding:13px 20px;border-radius:16px;
+  font-size:13px;font-weight:700;box-shadow:0 14px 30px rgba(0,0,0,.4);
+  opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.22,1,.36,1);
+  max-width:88%;text-align:center;line-height:1.4;
+}
+#toast.show{opacity:1;transform:translate(-50%,0);}
+#toast.ok{background:linear-gradient(135deg,#00b894,#00d2a8);}
+#toast.err{background:linear-gradient(135deg,#e74c3c,#ff6b9d);}
+#toast.info{background:linear-gradient(135deg,#6c5ce7,#a29bfe);}
+
+/* =========================== BOTTOM NAV =============================== */
+.bottom-nav{
+  position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(10px + env(safe-area-inset-bottom));
+  width:calc(100% - 22px);max-width:498px;z-index:100;
+  background:var(--nav-bg);backdrop-filter:blur(18px);
+  border-radius:26px;padding:9px 7px;
+  display:flex;justify-content:space-between;
+  box-shadow:0 12px 34px rgba(20,24,60,.22), 0 2px 0 rgba(255,255,255,.5) inset;
+  border:1.5px solid var(--line);
+}
+.nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 2px;border-radius:17px;color:var(--muted);
+  transition:all .25s cubic-bezier(.22,1,.36,1);position:relative;
+}
+.nav-btn svg{width:21px;height:21px;stroke-width:2.1;transition:transform .25s;}
+.nav-btn .nav-lbl{font-size:9.5px;font-weight:700;letter-spacing:.1px;}
+.nav-btn.active{color:#fff;background:linear-gradient(135deg,#6c5ce7,#8f7bf5);
+  box-shadow:0 6px 0 rgba(108,92,231,.3), 0 10px 18px rgba(108,92,231,.32);}
+.nav-btn.active svg{transform:translateY(-1px) scale(1.08);}
+.nav-btn:active{transform:scale(.94);}
+
+/* ============================ ADMIN PANEL ============================= */
+#adminPanel{
+  position:fixed;inset:0;z-index:400;display:none;overflow-y:auto;
+  background:
+    radial-gradient(900px 420px at 10% -10%, var(--bg-grad-2), transparent 60%),
+    var(--bg);
+  padding-bottom:calc(40px + env(safe-area-inset-bottom));
+}
+#adminPanel.open{display:block;animation:screenIn .3s ease;}
+.admin-head{
+  position:sticky;top:0;z-index:20;
+  padding:calc(env(safe-area-inset-top) + 14px) 16px 14px;
+  background:linear-gradient(135deg,#161a3a,#3b2f7a 60%,#6c5ce7);
+  color:#fff;display:flex;align-items:center;gap:12px;
+  border-radius:0 0 24px 24px;box-shadow:0 10px 26px rgba(20,24,60,.35);
+}
+.admin-head h2{font-size:16px;font-weight:800;flex:1;}
+.admin-inner{max-width:520px;margin:0 auto;padding:16px;}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.stat{
+  background:var(--surface);border-radius:20px;padding:15px;border:1.5px solid var(--line);
+  box-shadow:var(--shadow-3d);
+}
+.stat .n{font-size:24px;font-weight:800;line-height:1;}
+.stat .l{font-size:11px;color:var(--muted);font-weight:700;margin-top:6px;letter-spacing:.2px;}
+.admin-tabs{display:flex;gap:7px;overflow-x:auto;margin-bottom:14px;padding-bottom:3px;}
+.atab{
+  padding:10px 15px;border-radius:13px;font-size:12.5px;font-weight:700;
+  background:var(--surface);border:1.5px solid var(--line);color:var(--muted);white-space:nowrap;
+}
+.atab.active{background:linear-gradient(135deg,#6c5ce7,#a29bfe);color:#fff;border-color:transparent;}
+.admin-video-row{
+  display:flex;gap:11px;align-items:center;padding:10px;border-radius:16px;
+  background:var(--surface);border:1.5px solid var(--line);margin-bottom:9px;box-shadow:var(--shadow);
+}
+.admin-video-row .at{
+  width:70px;height:44px;flex:0 0 70px;border-radius:11px;overflow:hidden;
+  background:linear-gradient(135deg,#6c5ce7,#ff6b9d);display:grid;place-items:center;font-size:18px;
+}
+.admin-video-row .at img{width:100%;height:100%;object-fit:cover;}
+.admin-video-row .am{flex:1;min-width:0;}
+.admin-video-row .am h5{font-size:12.5px;font-weight:700;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35;}
+.admin-video-row .am p{font-size:10.5px;color:var(--muted);margin-top:3px;}
+.admin-video-row .acts{display:flex;flex-direction:column;gap:6px;}
+.mini-btn{
+  width:34px;height:30px;border-radius:10px;display:grid;place-items:center;font-size:13px;
+  background:var(--surface-2);border:1.5px solid var(--line);
+}
+.mini-btn.del{background:rgba(255,92,92,.12);border-color:rgba(255,92,92,.3);}
+.badge{
+  display:inline-block;font-size:10px;font-weight:800;padding:3px 9px;border-radius:999px;
+  background:var(--surface-3);color:var(--muted);letter-spacing:.3px;
+}
+.badge.live{background:rgba(0,210,168,.18);color:#00997a;}
+html[data-theme="dark"] .badge.live{color:#00d2a8;}
+
+/* ========================== MISC / STATES ============================= */
+.notice{
+  padding:14px 16px;border-radius:18px;font-size:12.5px;line-height:1.55;
+  background:rgba(108,92,231,.09);border:1.5px solid rgba(108,92,231,.22);
+  color:var(--text);margin-bottom:14px;
+}
+.notice.warn{background:rgba(255,201,60,.14);border-color:rgba(255,201,60,.4);}
+.notice.good{background:rgba(0,210,168,.12);border-color:rgba(0,210,168,.35);}
+.notice.err{background:rgba(255,92,92,.12);border-color:rgba(255,92,92,.38);}
+.notice b{font-weight:800;}
+
+.empty{
+  text-align:center;padding:38px 20px;border-radius:24px;
+  background:var(--surface);border:1.5px dashed var(--line);
+}
+.empty .e{font-size:46px;margin-bottom:12px;display:block;}
+.empty h4{font-size:14.5px;font-weight:800;margin-bottom:6px;}
+.empty p{font-size:12.5px;color:var(--muted);line-height:1.55;max-width:280px;margin:0 auto;}
+
+.skeleton{
+  border-radius:20px;background:linear-gradient(90deg,var(--surface-3) 25%,var(--surface-2) 50%,var(--surface-3) 75%);
+  background-size:200% 100%;animation:shimmer 1.3s infinite;height:150px;
+}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+.policy{font-size:13px;line-height:1.75;color:var(--text);}
+.policy h4{font-size:14px;font-weight:800;margin:18px 0 7px;color:var(--primary);}
+.policy p{margin-bottom:9px;color:var(--muted);}
+.policy ul{margin:0 0 10px 18px;color:var(--muted);}
+.policy li{margin-bottom:5px;}
+.policy a{color:var(--primary);font-weight:700;text-decoration:none;}
+.policy .updated{font-size:11.5px;font-weight:800;color:var(--muted);letter-spacing:.3px;}
+
+/* RTL support */
+html[dir="rtl"] .search-wrap .s-ico{left:auto;right:16px;}
+html[dir="rtl"] .search-wrap input{padding:15px 44px 15px 16px;}
+html[dir="rtl"] .hero p{max-width:88%;}
+html[dir="rtl"] .v-cat{left:auto;right:8px;}
+html[dir="rtl"] .v-fav{right:auto;left:8px;}
+html[dir="rtl"] .v-dur{right:auto;left:8px;}
+
+/* Reduce motion */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important;transition-duration:.01ms !important;}
+}
+</style>
+
+<!-- =====================================================================
+     FIREBASE – CDN import map (no NPM / bundler required)
+     The SDK is loaded directly from gstatic.com. The import map lets the
+     module script below use bare specifiers like "firebase/app".
+     ===================================================================== -->
+<script type="importmap">
+{
+  "imports": {
+    "firebase/app":       "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js",
+    "firebase/firestore": "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js",
+    "firebase/auth":      "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js"
+  }
+}
+</script>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============================ TOP BAR ============================ -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="avatar">🧒</div>
+      <div class="brand-txt">
+        <div class="hello" id="greeting" data-i18n="hello">Hello, Little Star!</div>
+        <h1>Boy Talk</h1>
+      </div>
+    </div>
+    <button class="icon-btn" id="langBtn" title="Language / زبان" aria-label="Switch language">🌐</button>
+    <button class="icon-btn" id="themeBtn" title="Theme" aria-label="Toggle theme">🌙</button>
+  </header>
+
+  <!-- ============================= HOME ============================== -->
+  <section class="screen active" id="screen-home">
+    <div class="hero">
+      <div class="hero-inner">
+        <span class="tag">✨ <span data-i18n="heroTag">Premium Kids Learning</span></span>
+        <h2 data-i18n="heroTitle">Learn, Play &amp; Grow Every Day!</h2>
+        <p data-i18n="heroText">Fun videos, flashcards and quizzes in English &amp; Urdu — safe and ad-friendly for kids.</p>
+        <button class="btn-primary" id="heroStart">▶ <span data-i18n="startLearning">Start Learning</span></button>
+      </div>
+      <div class="hero-emoji">🚀</div>
+    </div>
+
+    <div class="search-wrap">
+      <span class="s-ico">🔍</span>
+      <input type="search" id="globalSearch" placeholder="Search videos, alphabets, rhymes…" data-i18n-ph="searchPh" />
+    </div>
+
+    <div class="goal-card">
+      <div class="ring" id="goalRing"><span id="goalPct">0%</span></div>
+      <div class="goal-txt">
+        <h4 data-i18n="dailyGoal">Daily Learning Goal</h4>
+        <p id="goalText">Watch 0 of 3 videos today. Keep going!</p>
+      </div>
+    </div>
+
+    <div id="searchResults"></div>
+
+    <div id="homeSections">
+      <div class="sec-head"><h2><span class="dot"></span><span data-i18n="continueWatching">Continue Watching</span></h2></div>
+      <div class="hscroll" id="continueRow"></div>
+
+      <div class="sec-head">
+        <h2><span class="dot"></span><span data-i18n="featured">Featured Videos</span></h2>
+        <button class="link" data-goto="explore" data-i18n="seeAll">See all</button>
+      </div>
+      <div class="hscroll" id="featuredRow"></div>
+
+      <div class="sec-head">
+        <h2><span class="dot"></span><span data-i18n="categories">Popular Categories</span></h2>
+        <button class="link" data-goto="explore" data-i18n="seeAll">See all</button>
+      </div>
+      <div class="hscroll cat-scroll" id="catRow"></div>
+
+      <div class="sec-head"><h2><span class="dot"></span><span data-i18n="recentlyAdded">Recently Added</span></h2></div>
+      <div class="v-grid" id="recentGrid"></div>
+    </div>
+  </section>
+
+  <!-- ============================ EXPLORE ============================ -->
+  <section class="screen" id="screen-explore">
+    <div class="sec-head" style="margin-top:4px">
+      <h2><span class="dot"></span><span data-i18n="exploreCats">Explore Categories</span></h2>
+    </div>
+    <div class="search-wrap" style="margin-bottom:14px">
+      <span class="s-ico">🔍</span>
+      <input type="search" id="exploreSearch" placeholder="Search in categories…" />
+    </div>
+    <div id="exploreBody"></div>
+  </section>
+
+  <!-- =========================== LEARNING ============================ -->
+  <section class="screen" id="screen-learning">
+    <div class="sec-head" style="margin-top:4px">
+      <h2><span class="dot"></span><span data-i18n="learningHub">Learning Hub</span></h2>
+    </div>
+    <div class="tabs" id="learnTabs">
+      <button class="tab active" data-ltab="cards" data-i18n="flashcards">Flashcards</button>
+      <button class="tab" data-ltab="quiz" data-i18n="quizzes">Quizzes</button>
+      <button class="tab" data-ltab="videos" data-i18n="videos">Videos</button>
+    </div>
+    <div id="learningBody"></div>
+  </section>
+
+  <!-- ============================ MY LIST ============================ -->
+  <section class="screen" id="screen-mylist">
+    <div class="sec-head" style="margin-top:4px">
+      <h2><span class="dot"></span><span data-i18n="myList">My List</span></h2>
+    </div>
+    <div class="tabs" id="listTabs">
+      <button class="tab active" data-mtab="fav" data-i18n="favorites">Favorites</button>
+      <button class="tab" data-mtab="history" data-i18n="history">History</button>
+      <button class="tab" data-mtab="progress" data-i18n="progress">Progress</button>
+    </div>
+    <div id="myListBody"></div>
+  </section>
+
+  <!-- ============================ PARENTS ============================ -->
+  <section class="screen" id="screen-parents">
+    <div class="sec-head" style="margin-top:4px">
+      <h2><span class="dot"></span><span data-i18n="parentsArea">Parents Area</span></h2>
+    </div>
+    <div id="parentsBody"></div>
+  </section>
+
+  <!-- ========================= BOTTOM NAV ============================ -->
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="nav-btn active" data-screen="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>
+      <span class="nav-lbl" data-i18n="home">Home</span>
+    </button>
+    <button class="nav-btn" data-screen="explore">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m15.6 8.4-2.1 5.1-5.1 2.1 2.1-5.1z"/></svg>
+      <span class="nav-lbl" data-i18n="explore">Explore</span>
+    </button>
+    <button class="nav-btn" data-screen="learning">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg>
+      <span class="nav-lbl" data-i18n="learning">Learning</span>
+    </button>
+    <button class="nav-btn" data-screen="mylist">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 5.6a5 5 0 0 0-7.1 0L12 7.3l-1.7-1.7a5 5 0 1 0-7.1 7.1l8.8 8.8 8.8-8.8a5 5 0 0 0 0-7.1z"/></svg>
+      <span class="nav-lbl" data-i18n="myListNav">My List</span>
+    </button>
+    <button class="nav-btn" data-screen="parents">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <span class="nav-lbl" data-i18n="parents">Parents</span>
+    </button>
+  </nav>
+</div>
+
+<!-- ============================ PLAYER MODAL =========================== -->
+<div class="modal modal-player" id="playerModal">
+  <div class="player-wrap">
+    <div class="player-head">
+      <button class="icon-btn" id="playerClose" aria-label="Close player">✕</button>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:11px;opacity:.6;font-weight:700" id="playerCat">Category</div>
+      </div>
+      <button class="icon-btn" id="playerFav" aria-label="Favorite">♡</button>
+    </div>
+    <div class="player-frame" id="playerFrame"></div>
+    <div class="player-info">
+      <h3 id="playerTitle">Video title</h3>
+      <div class="meta" id="playerMeta"></div>
+      <div class="player-actions">
+        <button class="pa" id="btnRepeat">🔁 <span data-i18n="repeat">Repeat</span></button>
+        <button class="pa" id="btnNext">⏭ <span data-i18n="next">Next</span></button>
+        <button class="pa" id="btnComplete">✅ <span data-i18n="markDone">Mark Done</span></button>
+        <button class="pa" id="btnQuizFromPlayer">🧠 <span data-i18n="quiz">Quiz</span></button>
+        <button class="pa" id="btnReadAloud">🔊 <span data-i18n="readAloud">Read Aloud</span></button>
+      </div>
+      <div class="related-title" data-i18n="relatedVideos">Related Videos</div>
+      <div class="related-list" id="relatedList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ QUIZ MODAL ============================= -->
+<div class="modal" id="quizModal">
+  <div class="sheet">
+    <div class="sheet-grip"></div>
+    <h3 id="quizTitle">Quiz</h3>
+    <p class="sub" id="quizSub">Choose the correct answer.</p>
+    <div id="quizBody"></div>
+  </div>
+</div>
+
+<!-- ============================ GENERIC SHEET ========================== -->
+<div class="modal" id="infoModal">
+  <div class="sheet">
+    <div class="sheet-grip"></div>
+    <h3 id="infoTitle">Info</h3>
+    <div id="infoBody"></div>
+  </div>
+</div>
+
+<!-- ============================ ADMIN LOGIN ============================ -->
+<div class="modal" id="adminLoginModal">
+  <div class="sheet">
+    <div class="sheet-grip"></div>
+    <h3>🔐 <span data-i18n="adminLogin">Admin Login</span></h3>
+    <p class="sub">Restricted area for the app owner. Parents and children do not need to log in.</p>
+    <div id="adminLoginBody"></div>
+  </div>
+</div>
+
+<!-- ============================ ADMIN PANEL ============================ -->
+<div id="adminPanel">
+  <div class="admin-head">
+    <button class="icon-btn" id="adminClose" aria-label="Close admin">✕</button>
+    <h2>⚙️ Admin Dashboard</h2>
+    <span class="badge live" id="adminModeBadge">LIVE</span>
+  </div>
+  <div class="admin-inner">
+    <div class="stat-grid" id="adminStats"></div>
+    <div class="admin-tabs" id="adminTabs">
+      <button class="atab active" data-atab="videos">🎬 Videos</button>
+      <button class="atab" data-atab="add">➕ Add / Edit</button>
+      <button class="atab" data-atab="categories">🗂 Categories</button>
+      <button class="atab" data-atab="settings">🔧 System</button>
+    </div>
+    <div id="adminBody"></div>
+  </div>
+</div>
+
+<!-- ============================== TOAST ================================ -->
+<div id="toast"></div>
+
+<script type="module">
+/* =========================================================================
+   BOY TALK – KIDS LEARNING APP  (Firebase-only build)
+   -------------------------------------------------------------------------
+   • Videos are loaded from Firebase Cloud Firestore (collection: "videos").
+   • Admin sign-in uses Firebase Authentication (Email/Password).
+   • Firestore Security Rules protect writes — see the rules block at the
+     bottom of this file and copy them into:
+        Firebase Console → Firestore Database → Rules
+   • Regular parents and children never need an account.
+   -------------------------------------------------------------------------
+   IMPORTANT – one-time Firebase setup checklist:
+     1. Firebase Console → Authentication → Sign-in method → Email/Password
+        → Enable.
+     2. Firebase Console → Authentication → Users → "Add user" and create the
+        admin account (email + password) you will use to log in.
+     3. Firestore → Create database (start in production mode).
+     4. Firestore → Rules → paste the rules from the bottom of this file.
+     5. Firestore → Data → create a collection named exactly "videos".
+        Documents you add via the Admin Panel will appear here.
+   ========================================================================= */
+
+/* ---------------------- Firebase SDK imports ------------------------- */
+import { initializeApp } from "firebase/app";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+  setDoc,
+  deleteDoc
+} from "firebase/firestore";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from "firebase/auth";
+
+/* ===================== 1. FIREBASE CONFIGURATION ======================== */
+/* These are your web-app config values. They are safe to ship in a web app;
+   real protection comes from Firestore Security Rules + Firebase Auth. */
+const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyCfCRYJs24b5fFGeUeaWkQLiBBzYJbiQ2U",
+  authDomain:        "boy-talk.firebaseapp.com",
+  projectId:         "boy-talk",
+  storageBucket:     "boy-talk.firebasestorage.app",
+  messagingSenderId: "182730237630",
+  appId:             "1:182730237630:web:f438cd5652ff51091b60ef",
+  measurementId:     "G-7G7MTH73S3"
+};
+
+/* Initialize Firebase once. If this throws, we surface a clear error to the
+   user instead of silently failing. */
+let fb = { app:null, db:null, auth:null, ready:false, error:null };
+try{
+  fb.app  = initializeApp(FIREBASE_CONFIG);
+  fb.db   = getFirestore(fb.app);
+  fb.auth = getAuth(fb.app);
+  fb.ready = true;
+
+  /* Optional Analytics — loaded lazily so a blocked analytics request never
+     prevents the app from starting. */
+  import("https://www.gstatic.com/firebasejs/13.0.0/firebase-analytics.js")
+    .then(m => { try{ m.getAnalytics(fb.app); }catch(e){} })
+    .catch(() => {});
+}catch(err){
+  fb.error = err;
+  console.error("[Boy Talk] Firebase initialization failed:", err);
+}
+
+/* ===================== 2. CONSTANTS & STATIC DATA ======================= */
+
+const SUPPORT = {
+  team: "Boy Talk Support Team",
+  email: "abcmalik38000@gmail.com",
+  whatsapp: "03288490006",
+  whatsappIntl: "923288490006",
+  address: "Faisalabad, Punjab, Pakistan.",
+  appName: "Boy Talk – Kids Learning App",
+  packageName: "com.boytalk.kidslearning",
+  updated: "16 October 2026"
+};
+
+/* --------------------------- CATEGORIES -------------------------------- */
+const DEFAULT_CATEGORIES = [
+  { id:"english-abc",  name:"English ABC",       nameUr:"انگریزی اے بی سی", icon:"🔤", color:"linear-gradient(135deg,#6c5ce7,#a29bfe)" },
+  { id:"urdu-letters", name:"Urdu Letters",      nameUr:"اردو حروف",        icon:"✍️", color:"linear-gradient(135deg,#00b894,#00d2a8)" },
+  { id:"numbers",      name:"Numbers",           nameUr:"اعداد",            icon:"🔢", color:"linear-gradient(135deg,#0984e3,#4fc3f7)" },
+  { id:"colors",       name:"Colors",            nameUr:"رنگ",              icon:"🎨", color:"linear-gradient(135deg,#e17055,#ff9f43)" },
+  { id:"shapes",       name:"Shapes",            nameUr:"شکلیں",            icon:"🔺", color:"linear-gradient(135deg,#d63031,#ff6b9d)" },
+  { id:"animals",      name:"Animals",           nameUr:"جانور",            icon:"🦁", color:"linear-gradient(135deg,#fdcb6e,#ff9f43)" },
+  { id:"rhymes",       name:"Nursery Rhymes",    nameUr:"نرسری نظمیں",      icon:"🎵", color:"linear-gradient(135deg,#a29bfe,#ff6b9d)" },
+  { id:"stories",      name:"Stories",           nameUr:"کہانیاں",          icon:"📖", color:"linear-gradient(135deg,#6c5ce7,#00d2a8)" },
+  { id:"math",         name:"Basic Mathematics", nameUr:"بنیادی ریاضی",     icon:"➗", color:"linear-gradient(135deg,#00cec9,#0984e3)" },
+  { id:"gk",           name:"General Knowledge", nameUr:"عمومی معلومات",    icon:"🌍", color:"linear-gradient(135deg,#0984e3,#6c5ce7)" },
+  { id:"science",      name:"Science for Kids",  nameUr:"بچوں کی سائنس",    icon:"🔬", color:"linear-gradient(135deg,#00b894,#4fc3f7)" },
+  { id:"habits",       name:"Good Habits",       nameUr:"اچھی عادات",       icon:"🌟", color:"linear-gradient(135deg,#fdcb6e,#00d2a8)" },
+  { id:"islamic",      name:"Islamic Learning",  nameUr:"اسلامی تعلیم",     icon:"🕌", color:"linear-gradient(135deg,#00b894,#2d3436)" }
+];
+
+/* ------------------------- FLASHCARD DATA ------------------------------ */
+const FLASHCARD_SETS = {
+  abc: {
+    label:"English ABC", icon:"🔤", speech:"en",
+    items:[["A","Apple 🍎"],["B","Ball ⚽"],["C","Cat 🐱"],["D","Dog 🐶"],["E","Elephant 🐘"],["F","Fish 🐟"],
+           ["G","Goat 🐐"],["H","Hat 🎩"],["I","Ice 🧊"],["J","Jug 🫙"],["K","Kite 🪁"],["L","Lion 🦁"],
+           ["M","Moon 🌙"],["N","Nest 🪹"],["O","Orange 🍊"],["P","Parrot 🦜"],["Q","Queen 👑"],["R","Rabbit 🐰"],
+           ["S","Sun ☀️"],["T","Tree 🌳"],["U","Umbrella ☂️"],["V","Van 🚐"],["W","Watch ⌚"],["X","Xylophone 🎼"],
+           ["Y","Yak 🐃"],["Z","Zebra 🦓"]]
+  },
+  urdu: {
+    label:"Urdu Letters", icon:"✍️", speech:"ur",
+    items:[["ا","الف"],["ب","بے"],["پ","پے"],["ت","تے"],["ٹ","ٹے"],["ث","ثے"],["ج","جیم"],["چ","چے"],
+           ["ح","حے"],["خ","خے"],["د","دال"],["ڈ","ڈال"],["ذ","ذال"],["ر","رے"],["ڑ","ڑے"],["ز","زے"],
+           ["ژ","ژے"],["س","سین"],["ش","شین"],["ص","صاد"],["ض","ضاد"],["ط","طوے"],["ظ","ظوے"],["ع","عین"],
+           ["غ","غین"],["ف","فے"],["ق","قاف"],["ک","کاف"],["گ","گاف"],["ل","لام"],["م","میم"],["ن","نون"],
+           ["و","واؤ"],["ہ","ہے"],["ی","یے"]]
+  },
+  numbers: {
+    label:"Numbers", icon:"🔢", speech:"en",
+    items:[["1","One"],["2","Two"],["3","Three"],["4","Four"],["5","Five"],["6","Six"],["7","Seven"],
+           ["8","Eight"],["9","Nine"],["10","Ten"],["11","Eleven"],["12","Twelve"],["13","Thirteen"],
+           ["14","Fourteen"],["15","Fifteen"],["16","Sixteen"],["17","Seventeen"],["18","Eighteen"],
+           ["19","Nineteen"],["20","Twenty"]]
+  },
+  colors: {
+    label:"Colors", icon:"🎨", speech:"en",
+    items:[["🔴","Red"],["🔵","Blue"],["🟢","Green"],["🟡","Yellow"],["🟠","Orange"],["🟣","Purple"],
+           ["⚫","Black"],["⚪","White"],["🟤","Brown"],["🩷","Pink"]]
+  },
+  shapes: {
+    label:"Shapes", icon:"🔺", speech:"en",
+    items:[["⭕","Circle"],["⬛","Square"],["🔺","Triangle"],["▬","Rectangle"],["⭐","Star"],["❤️","Heart"],
+           ["🔶","Diamond"],["🥚","Oval"]]
+  },
+  animals: {
+    label:"Animals", icon:"🦁", speech:"en",
+    items:[["🐶","Dog"],["🐱","Cat"],["🐘","Elephant"],["🦁","Lion"],["🐯","Tiger"],["🐮","Cow"],
+           ["🐐","Goat"],["🐔","Hen"],["🦆","Duck"],["🐰","Rabbit"],["🐴","Horse"],["🐟","Fish"]]
+  }
+};
+
+/* ---------------------- CATEGORY QUIZ BANK ----------------------------- */
+const QUIZ_BANK = {
+  "english-abc": { title:"English ABC Quiz", icon:"🔤",
+    qs:[ {q:"Which letter comes first?", o:["A","B","C"], a:0},
+         {q:"Which letter comes after M?", o:["L","N","O"], a:1},
+         {q:"How many letters are in the English alphabet?", o:["24","25","26"], a:2},
+         {q:"Which of these is a vowel?", o:["E","K","T"], a:0} ] },
+  "numbers": { title:"Numbers Quiz", icon:"🔢",
+    qs:[ {q:"What comes after 7?", o:["6","8","9"], a:1},
+         {q:"Which number is the biggest?", o:["12","21","11"], a:1},
+         {q:"2 + 2 = ?", o:["3","4","5"], a:1},
+         {q:"Count: 🍎🍎🍎 — how many apples?", o:["2","3","4"], a:1} ] },
+  "colors": { title:"Colors Quiz", icon:"🎨",
+    qs:[ {q:"What colour is the sun?", o:["Blue","Yellow","Green"], a:1},
+         {q:"What colour is grass?", o:["Green","Red","Black"], a:0},
+         {q:"What colour is milk?", o:["White","Purple","Brown"], a:0} ] },
+  "shapes": { title:"Shapes Quiz", icon:"🔺",
+    qs:[ {q:"How many sides does a square have?", o:["3","4","5"], a:1},
+         {q:"Which shape is round?", o:["Circle","Square","Triangle"], a:0},
+         {q:"A triangle has how many sides?", o:["3","4","6"], a:0} ] },
+  "animals": { title:"Animals Quiz", icon:"🦁",
+    qs:[ {q:"Which animal says 'Moo'?", o:["Cow","Dog","Cat"], a:0},
+         {q:"Which animal is the king of the jungle?", o:["Lion","Fish","Duck"], a:0},
+         {q:"Which animal can fly?", o:["Bird","Cow","Goat"], a:0} ] },
+  "urdu-letters": { title:"اردو حروف کا کوئز", icon:"✍️",
+    qs:[ {q:"اردو حروف تہجی کا پہلا حرف کون سا ہے؟", o:["ا","ب","پ"], a:0},
+         {q:"'ب' کے بعد کون سا حرف آتا ہے؟", o:["پ","ت","ج"], a:0},
+         {q:"'ا' کی آواز کیسی ہے؟", o:["آ","ای","او"], a:0} ] },
+  "math": { title:"Basic Mathematics Quiz", icon:"➗",
+    qs:[ {q:"5 + 5 = ?", o:["9","10","11"], a:1},
+         {q:"10 - 4 = ?", o:["6","5","7"], a:0},
+         {q:"3 × 2 = ?", o:["5","6","8"], a:1} ] },
+  "islamic": { title:"Islamic Learning Quiz", icon:"🕌",
+    qs:[ {q:"How many pillars of Islam are there?", o:["3","5","7"], a:1},
+         {q:"What is the first Kalima called?", o:["Kalima Tayyaba","Kalima Shahadat","Kalima Tamjeed"], a:0},
+         {q:"How many daily prayers (Salah) are there?", o:["3","4","5"], a:2} ] },
+  "habits": { title:"Good Habits Quiz", icon:"🌟",
+    qs:[ {q:"How many times a day should you brush your teeth?", o:["Never","Twice","Once a week"], a:1},
+         {q:"Before eating you should…", o:["Wash hands","Jump","Sleep"], a:0},
+         {q:"When a friend is sad you should…", o:["Ignore them","Help them","Laugh"], a:1} ] },
+  "science": { title:"Science for Kids Quiz", icon:"🔬",
+    qs:[ {q:"Which planet do we live on?", o:["Mars","Earth","Moon"], a:1},
+         {q:"What do plants need to grow?", o:["Water & sunlight","Plastic","Sand only"], a:0},
+         {q:"How many legs does an insect have?", o:["4","6","8"], a:1} ] }
+};
+
+/* ------------------------------ i18n ----------------------------------- */
+const I18N = {
+  en:{
+    hello:"Hello, Little Star!", home:"Home", explore:"Explore", learning:"Learning",
+    myList:"My List", myListNav:"My List", parents:"Parents", seeAll:"See all",
+    heroTag:"Premium Kids Learning", heroTitle:"Learn, Play & Grow Every Day!",
+    heroText:"Fun videos, flashcards and quizzes in English & Urdu — safe and ad-friendly for kids.",
+    startLearning:"Start Learning", searchPh:"Search videos, alphabets, rhymes…",
+    dailyGoal:"Daily Learning Goal", continueWatching:"Continue Watching",
+    featured:"Featured Videos", categories:"Popular Categories", recentlyAdded:"Recently Added",
+    exploreCats:"Explore Categories", learningHub:"Learning Hub", flashcards:"Flashcards",
+    quizzes:"Quizzes", videos:"Videos", favorites:"Favorites", history:"History",
+    progress:"Progress", parentsArea:"Parents Area", repeat:"Repeat", next:"Next",
+    markDone:"Mark Done", quiz:"Quiz", readAloud:"Read Aloud", relatedVideos:"Related Videos",
+    adminLogin:"Admin Login", noResults:"No results found"
+  },
+  ur:{
+    hello:"ہیلو، ننھے ستارے!", home:"ہوم", explore:"دریافت", learning:"سیکھنا",
+    myList:"میری فہرست", myListNav:"فہرست", parents:"والدین", seeAll:"سب دیکھیں",
+    heroTag:"بچوں کی بہترین تعلیم", heroTitle:"ہر روز سیکھیں، کھیلیں اور بڑھیں!",
+    heroText:"انگریزی اور اردو میں مزے دار ویڈیوز، فلیش کارڈز اور کوئز — بچوں کے لیے محفوظ۔",
+    startLearning:"سیکھنا شروع کریں", searchPh:"ویڈیوز، حروف، نظمیں تلاش کریں…",
+    dailyGoal:"روزانہ کا ہدف", continueWatching:"دیکھنا جاری رکھیں",
+    featured:"نمایاں ویڈیوز", categories:"مقبول زمرے", recentlyAdded:"نئی ویڈیوز",
+    exploreCats:"زمرے دریافت کریں", learningHub:"لرننگ ہب", flashcards:"فلیش کارڈز",
+    quizzes:"کوئز", videos:"ویڈیوز", favorites:"پسندیدہ", history:"تاریخ",
+    progress:"پیش رفت", parentsArea:"والدین کا حصہ", repeat:"دوبارہ", next:"اگلا",
+    markDone:"مکمل نشان زد کریں", quiz:"کوئز", readAloud:"بلند آواز میں پڑھیں",
+    relatedVideos:"متعلقہ ویڈیوز", adminLogin:"ایڈمن لاگ ان", noResults:"کچھ نہیں ملا"
+  }
+};
+
+/* ===================== 3. APPLICATION STATE ============================= */
+const LS_KEY = "boytalk_state_v1";
+const LS_CATS = "boytalk_custom_categories_v1";
+
+let state = {
+  theme:"light",
+  lang:"en",
+  favorites:[],
+  history:[],
+  progress:{},
+  quizResults:[],
+  dailyGoal:{ date: todayKey(), target:3, done:0 },
+  customCategories:[],
+  videos:[],              // populated from Firestore only
+  loadingVideos:true,     // true while the first Firestore read is in flight
+  loadError:null,         // holds the error message if the read failed
+  isAdmin:false,
+  adminEmail:null
+};
+
+/* Ephemeral UI state */
+let ui = {
+  currentVideo:null,
+  currentList:[],
+  currentQuiz:null,
+  quizIndex:0,
+  quizScore:0,
+  learningTab:"cards",
+  listTab:"fav",
+  adminTab:"videos",
+  activeCategory:null,
+  editId:null
+};
+
+/* ===================== 4. SMALL UTILITIES ============================== */
+const $  = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+
+function esc(str){
+  return String(str == null ? "" : str)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
+function todayKey(){
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+}
+function uid(prefix="v"){
+  return prefix + "-" + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+}
+function t(key){
+  const dict = I18N[state.lang] || I18N.en;
+  return dict[key] || I18N.en[key] || key;
+}
+function toast(msg, type="info", ms=2600){
+  const el = $("#toast");
+  el.textContent = msg;
+  el.className = "show " + type;
+  clearTimeout(el._t);
+  el._t = setTimeout(()=>{ el.className = type; }, ms);
+}
+
+/* ---- YouTube helpers -------------------------------------------------- */
+function extractYouTubeId(input){
+  if(!input) return null;
+  const url = String(input).trim();
+  if(/^[A-Za-z0-9_-]{11}$/.test(url)) return url;
+  const patterns = [
+    /(?:youtube\.com\/watch\?(?:.*&)?v=)([A-Za-z0-9_-]{11})/,
+    /(?:youtu\.be\/)([A-Za-z0-9_-]{11})/,
+    /(?:youtube\.com\/embed\/)([A-Za-z0-9_-]{11})/,
+    /(?:youtube\.com\/shorts\/)([A-Za-z0-9_-]{11})/,
+    /(?:youtube\.com\/live\/)([A-Za-z0-9_-]{11})/,
+    /(?:youtube-nocookie\.com\/embed\/)([A-Za-z0-9_-]{11})/
+  ];
+  for(const p of patterns){
+    const m = url.match(p);
+    if(m && m[1]) return m[1];
+  }
+  return null;
+}
+function thumbUrl(v){
+  if(v.thumbnail && /^https?:\/\//.test(v.thumbnail)) return v.thumbnail;
+  const id = v.youtubeId || extractYouTubeId(v.youtubeUrl);
+  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : "";
+}
+function embedUrl(id, autoplay=true){
+  return `https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1&playsinline=1`
+       + (autoplay ? "&autoplay=1" : "");
+}
+
+/* ---- Category helpers ------------------------------------------------- */
+function allCategories(){ return DEFAULT_CATEGORIES.concat(state.customCategories || []); }
+function getCategory(id){ return allCategories().find(c => c.id === id) || { id, name:id, nameUr:id, icon:"📚", color:"linear-gradient(135deg,#6c5ce7,#a29bfe)" }; }
+function catName(id){ const c = getCategory(id); return state.lang === "ur" && c.nameUr ? c.nameUr : c.name; }
+function catIcon(id){ return getCategory(id).icon; }
+function getVideo(id){ return state.videos.find(v => v.id === id); }
+function videosInCategory(id){ return state.videos.filter(v => v.category === id); }
+
+/* ===================== 5. LOCAL PERSISTENCE (preferences only) ========= */
+/* Only non-sensitive user preferences are stored locally. Videos are never
+   persisted locally — they always come from Firestore. */
+function saveState(){
+  try{
+    const { theme, lang, favorites, history, progress, quizResults, dailyGoal, customCategories } = state;
+    localStorage.setItem(LS_KEY, JSON.stringify({
+      theme, lang, favorites, history, progress, quizResults, dailyGoal, customCategories
+    }));
+  }catch(e){ /* storage may be unavailable */ }
+}
+function loadState(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(raw){
+      const s = JSON.parse(raw);
+      Object.assign(state, s);
+      if(!state.dailyGoal || state.dailyGoal.date !== todayKey()){
+        state.dailyGoal = { date: todayKey(), target:3, done:0 };
+      }
+    }
+  }catch(e){ /* ignore corrupt state */ }
+}
+function loadCustomCategories(){
+  try{
+    const raw = localStorage.getItem(LS_CATS);
+    if(raw) return JSON.parse(raw) || [];
+  }catch(e){}
+  return [];
+}
+function saveCustomCategories(){
+  try{ localStorage.setItem(LS_CATS, JSON.stringify(state.customCategories)); }catch(e){}
+}
+
+/* ===================== 6. FIRESTORE DATA ACCESS ======================== */
+
+/**
+ * Load the full "videos" collection from Firestore.
+ * Throws on failure so callers can show a proper error state.
+ */
+async function fetchVideosFromFirestore(){
+  if(!fb.ready) throw new Error("Firebase is not initialized.");
+  const snap = await getDocs(collection(fb.db, "videos"));
+  const list = [];
+  snap.forEach(d => list.push(Object.assign({ id:d.id }, d.data())));
+  return list;
+}
+
+/**
+ * Save (create or update) a video document. Admin-only operation — protected
+ * by Firestore Security Rules, not by this JavaScript.
+ */
+async function saveVideoToFirestore(id, data){
+  if(!fb.ready) throw new Error("Firebase is not initialized.");
+  if(!state.isAdmin) throw new Error("You must be signed in as an administrator.");
+  await setDoc(doc(fb.db, "videos", id), data, { merge:false });
+}
+
+/** Delete a video document (admin-only). */
+async function deleteVideoFromFirestore(id){
+  if(!fb.ready) throw new Error("Firebase is not initialized.");
+  if(!state.isAdmin) throw new Error("You must be signed in as an administrator.");
+  await deleteDoc(doc(fb.db, "videos", id));
+}
+
+/* ===================== 7. NAVIGATION =================================== */
+function showScreen(name){
+  $$(".screen").forEach(s => s.classList.remove("active"));
+  const el = $("#screen-" + name);
+  if(el) el.classList.add("active");
+  $$(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.screen === name));
+  window.scrollTo({ top:0, behavior:"smooth" });
+
+  if(name === "home")     renderHome();
+  if(name === "explore")  renderExplore();
+  if(name === "learning") renderLearning();
+  if(name === "mylist")   renderMyList();
+  if(name === "parents")  renderParents();
+}
+function openModal(id){ const m = $("#" + id); if(m) m.classList.add("open"); }
+function closeModal(id){ const m = $("#" + id); if(m) m.classList.remove("open"); }
+
+/* ===================== 8. THEME & LANGUAGE ============================= */
+function applyTheme(){
+  document.documentElement.setAttribute("data-theme", state.theme);
+  $("#themeBtn").textContent = state.theme === "dark" ? "☀️" : "🌙";
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute("content", state.theme === "dark" ? "#0e1120" : "#6c5ce7");
+}
+function applyLanguage(){
+  const rtl = state.lang === "ur";
+  document.documentElement.setAttribute("dir", rtl ? "rtl" : "ltr");
+  document.documentElement.setAttribute("lang", rtl ? "ur" : "en");
+  $$("[data-i18n]").forEach(el => { el.textContent = t(el.dataset.i18n); });
+  $$("[data-i18n-ph]").forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
+  $("#langBtn").textContent = rtl ? "EN" : "🌐";
+}
+
+/* ===================== 9. RENDER: HOME ================================= */
+function progressOf(id){ return Math.max(0, Math.min(100, state.progress[id] || 0)); }
+
+function videoCardHTML(v, opts={}){
+  const thumb = thumbUrl(v);
+  const prog  = progressOf(v.id);
+  const fav   = state.favorites.includes(v.id);
+  const showProg = opts.showProgress && prog > 0;
+  return `
+  <article class="v-card" data-vid="${esc(v.id)}" tabindex="0" role="button" aria-label="${esc(v.title)}">
+    <div class="v-thumb">
+      <span class="fallback">${catIcon(v.category)}</span>
+      ${thumb ? `<img loading="lazy" src="${esc(thumb)}" alt="" onerror="this.classList.add('img-fail')">` : ""}
+      <span class="v-cat">${catIcon(v.category)}</span>
+      ${v.duration ? `<span class="v-dur">${esc(v.duration)}</span>` : ""}
+      <button class="v-fav ${fav?"on":""}" data-fav="${esc(v.id)}" aria-label="Toggle favorite">${fav?"♥":"♡"}</button>
+      ${showProg ? `<div class="v-prog"><i style="width:${prog}%"></i></div>` : ""}
+    </div>
+    <div class="v-body">
+      <h4>${esc(state.lang === "ur" && v.titleUr ? v.titleUr : v.title)}</h4>
+      <p>${catIcon(v.category)} ${esc(catName(v.category))}</p>
+    </div>
+  </article>`;
+}
+
+function renderHome(){
+  /* If the very first Firestore load is still in flight, show skeletons. */
+  if(state.loadingVideos){
+    $("#continueRow").innerHTML = `<div class="skeleton" style="width:186px;height:150px"></div>
+                                   <div class="skeleton" style="width:186px;height:150px"></div>`;
+    $("#featuredRow").innerHTML = `<div class="skeleton" style="width:186px;height:150px"></div>
+                                   <div class="skeleton" style="width:186px;height:150px"></div>`;
+    $("#recentGrid").innerHTML = `<div class="skeleton" style="height:150px"></div>
+                                  <div class="skeleton" style="height:150px"></div>`;
+    $("#catRow").innerHTML = allCategories().map(c => `
+      <button class="cat-chip" data-cat="${esc(c.id)}">
+        <span class="cico" style="background:${c.color};color:#fff">${c.icon}</span>
+        <span>${esc(state.lang === "ur" && c.nameUr ? c.nameUr : c.name)}</span>
+      </button>`).join("");
+    updateGoalUI();
+    updateGreeting();
+    return;
+  }
+
+  /* Error state from Firestore read. */
+  if(state.loadError){
+    const banner = `
+      <div class="notice err" style="margin:0 0 12px">
+        ⚠️ <b>Could not load videos from Firebase.</b><br>
+        ${esc(state.loadError)}<br>
+        <button class="btn btn-sm btn-grad" id="retryLoad" style="margin-top:10px;width:auto">Retry</button>
+      </div>`;
+    $("#continueRow").innerHTML = "";
+    $("#featuredRow").innerHTML = "";
+    $("#recentGrid").innerHTML = banner;
+    $("#catRow").innerHTML = allCategories().map(c => `
+      <button class="cat-chip" data-cat="${esc(c.id)}">
+        <span class="cico" style="background:${c.color};color:#fff">${c.icon}</span>
+        <span>${esc(state.lang === "ur" && c.nameUr ? c.nameUr : c.name)}</span>
+      </button>`).join("");
+    updateGoalUI();
+    updateGreeting();
+    return;
+  }
+
+  // Continue watching
+  const cont = state.history.map(getVideo).filter(Boolean).slice(0,8);
+  $("#continueRow").innerHTML = cont.length
+    ? cont.map(v => videoCardHTML(v, { showProgress:true })).join("")
+    : `<div class="empty" style="width:100%"><span class="e">🍿</span><h4>Nothing here yet</h4>
+       <p>Open any video and it will appear here so your child can continue watching.</p></div>`;
+
+  // Featured
+  const feat = state.videos.filter(v => v.featured).slice(0,10);
+  const featList = feat.length ? feat : state.videos.slice(0,10);
+  $("#featuredRow").innerHTML = featList.length
+    ? featList.map(v => videoCardHTML(v)).join("")
+    : `<div class="empty" style="width:100%"><span class="e">🎬</span><h4>No videos yet</h4>
+       <p>The app owner can add videos from <b>Parents → Admin Login → Add / Edit</b>.</p></div>`;
+
+  // Categories row
+  $("#catRow").innerHTML = allCategories().map(c => `
+    <button class="cat-chip" data-cat="${esc(c.id)}">
+      <span class="cico" style="background:${c.color};color:#fff">${c.icon}</span>
+      <span>${esc(state.lang === "ur" && c.nameUr ? c.nameUr : c.name)}</span>
+    </button>`).join("");
+
+  // Recently added
+  const recent = state.videos.slice().reverse().slice(0,6);
+  $("#recentGrid").innerHTML = recent.length
+    ? recent.map(v => videoCardHTML(v)).join("")
+    : `<div class="empty" style="grid-column:1/-1"><span class="e">📭</span><h4>No recent videos</h4>
+       <p>New learning videos will appear here.</p></div>`;
+
+  updateGoalUI();
+  updateGreeting();
+}
+
+function updateGreeting(){
+  const h = new Date().getHours();
+  let greet = "Hello, Little Star!";
+  if(state.lang === "ur") greet = t("hello");
+  else if(h < 12) greet = "Good morning, Little Star!";
+  else if(h < 17) greet = "Good afternoon, Little Star!";
+  else greet = "Good evening, Little Star!";
+  const el = $("#greeting");
+  el.textContent = greet;
+  el.removeAttribute("data-i18n");
+}
+
+function updateGoalUI(){
+  const g = state.dailyGoal;
+  const pct = Math.min(100, Math.round((g.done / g.target) * 100));
+  $("#goalRing").style.setProperty("--p", pct);
+  $("#goalPct").textContent = pct + "%";
+  const left = Math.max(0, g.target - g.done);
+  $("#goalText").textContent = left === 0
+    ? `🎉 Goal complete! ${g.done} of ${g.target} videos watched today.`
+    : `Watch ${g.done} of ${g.target} videos today. ${left} to go!`;
+}
+
+/* ===================== 10. RENDER: EXPLORE ============================= */
+function renderExplore(){
+  const term = ($("#exploreSearch").value || "").trim().toLowerCase();
+  const cats = allCategories().filter(c =>
+    !term || c.name.toLowerCase().includes(term) || (c.nameUr||"").includes(term)
+  );
+
+  if(!cats.length){
+    $("#exploreBody").innerHTML = emptyState("🔍","No categories found","Try a different search word.");
+    return;
+  }
+
+  $("#exploreBody").innerHTML = `
+    <div class="cat-grid">
+      ${cats.map(c => {
+        const count = videosInCategory(c.id).length;
+        return `<button class="cat-card" style="background:${c.color}" data-cat="${esc(c.id)}">
+          <span class="ci">${c.icon}</span>
+          <div>
+            <h4>${esc(state.lang === "ur" && c.nameUr ? c.nameUr : c.name)}</h4>
+            <small>${count} video${count === 1 ? "" : "s"}</small>
+          </div>
+        </button>`;
+      }).join("")}
+    </div>`;
+}
+
+function renderCategoryDetail(catId){
+  const c = getCategory(catId);
+  const list = videosInCategory(catId);
+  ui.activeCategory = catId;
+
+  const header = `
+    <div class="sec-head" style="margin-top:0">
+      <h2><span class="dot"></span>${c.icon} ${esc(state.lang === "ur" && c.nameUr ? c.nameUr : c.name)}</h2>
+      <button class="link" id="backToCats">← Back</button>
+    </div>`;
+
+  const body = list.length
+    ? `<div class="v-grid">${list.map(v => videoCardHTML(v, { showProgress:true })).join("")}</div>`
+    : emptyState("📭","No videos in this category yet",
+        "The app owner can add videos for this category from the Admin Panel.");
+
+  $("#exploreBody").innerHTML = header + body;
+  const back = $("#backToCats");
+  if(back) back.addEventListener("click", renderExplore);
+}
+
+/* ===================== 11. RENDER: LEARNING ============================ */
+function renderLearning(){
+  const body = $("#learningBody");
+
+  if(ui.learningTab === "cards"){
+    const sets = Object.keys(FLASHCARD_SETS);
+    body.innerHTML = `
+      <div class="tabs" style="overflow-x:auto;background:transparent;padding:0;gap:8px;margin-bottom:14px">
+        ${sets.map((k,i) => `<button class="atab ${i===0?"active":""}" data-set="${k}"
+          style="flex:0 0 auto">${FLASHCARD_SETS[k].icon} ${FLASHCARD_SETS[k].label}</button>`).join("")}
+      </div>
+      <div id="flashArea"></div>`;
+    renderFlashcards(sets[0]);
+    $$("[data-set]", body).forEach(btn => {
+      btn.addEventListener("click", () => {
+        $$("[data-set]", body).forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderFlashcards(btn.dataset.set);
+      });
+    });
+    return;
+  }
+
+  if(ui.learningTab === "quiz"){
+    const keys = Object.keys(QUIZ_BANK);
+    body.innerHTML = `
+      <div class="notice">🧠 Tap a quiz to start. Each quiz shows the score and correct answers at the end.</div>
+      ${keys.map(k => {
+        const q = QUIZ_BANK[k];
+        return `<div class="quiz-card">
+          <div class="qi" style="background:${getCategory(k).color};color:#fff">${q.icon}</div>
+          <div class="qt">
+            <h4>${esc(q.title)}</h4>
+            <p>${q.qs.length} questions • ${esc(catName(k))}</p>
+          </div>
+          <button class="go" data-quiz="${esc(k)}">Start</button>
+        </div>`;
+      }).join("")}`;
+    return;
+  }
+
+  // Videos tab
+  const cats = allCategories().filter(c => videosInCategory(c.id).length);
+  body.innerHTML = cats.length
+    ? cats.map(c => `
+        <div class="sec-head"><h2><span class="dot"></span>${c.icon} ${esc(catName(c.id))}</h2></div>
+        <div class="hscroll">${videosInCategory(c.id).map(v => videoCardHTML(v)).join("")}</div>
+      `).join("")
+    : emptyState("🎬","No videos available","The app owner can add videos from the Admin Panel in the Parents tab.");
+}
+
+function renderFlashcards(setKey){
+  const set = FLASHCARD_SETS[setKey];
+  if(!set) return;
+  $("#flashArea").innerHTML = `
+    <div class="notice">🔊 Tap any card to hear it read aloud. (Uses your device's built-in text-to-speech.)</div>
+    <div class="flash-grid">
+      ${set.items.map((it, i) => `
+        <button class="flash" data-speak="${esc(it[1])}" data-lang="${set.speech}" data-idx="${i}">
+          <div class="big">${esc(it[0])}</div>
+          <div class="sub">${esc(it[1])}</div>
+        </button>`).join("")}
+    </div>`;
+}
+
+/* ===================== 12. RENDER: MY LIST ============================= */
+function renderMyList(){
+  const body = $("#myListBody");
+
+  if(ui.listTab === "fav"){
+    const favs = state.favorites.map(getVideo).filter(Boolean);
+    body.innerHTML = favs.length
+      ? `<div class="v-grid">${favs.map(v => videoCardHTML(v, { showProgress:true })).join("")}</div>`
+      : emptyState("💖","No favorites yet","Tap the heart on any video to save it here.");
+    return;
+  }
+
+  if(ui.listTab === "history"){
+    const hist = state.history.map(getVideo).filter(Boolean);
+    body.innerHTML = hist.length
+      ? `<div class="notice">🕘 Recently watched videos on this device.</div>
+         ${hist.map(v => `
+          <div class="list-row" data-vid="${esc(v.id)}">
+            <div class="li" style="background:${getCategory(v.category).color};color:#fff">${catIcon(v.category)}</div>
+            <div class="lt"><h4>${esc(v.title)}</h4><p>${esc(catName(v.category))} • ${progressOf(v.id)}% watched</p></div>
+            <span class="chev">›</span>
+          </div>`).join("")}`
+      : emptyState("🕘","No history yet","Videos you open will be listed here.");
+    return;
+  }
+
+  // Progress tab
+  const watched = Object.keys(state.progress).length;
+  const completed = Object.values(state.progress).filter(p => p >= 100).length;
+  const favCount = state.favorites.length;
+  const results = state.quizResults.slice().reverse().slice(0,10);
+
+  body.innerHTML = `
+    <div class="stat-grid">
+      <div class="stat"><div class="n">${watched}</div><div class="l">VIDEOS STARTED</div></div>
+      <div class="stat"><div class="n">${completed}</div><div class="l">VIDEOS COMPLETED</div></div>
+      <div class="stat"><div class="n">${favCount}</div><div class="l">FAVORITES</div></div>
+      <div class="stat"><div class="n">${state.quizResults.length}</div><div class="l">QUIZZES TAKEN</div></div>
+    </div>
+    <div class="sec-head"><h2><span class="dot"></span>Quiz Results</h2></div>
+    ${results.length ? results.map(r => `
+      <div class="list-row">
+        <div class="li" style="background:linear-gradient(135deg,#6c5ce7,#a29bfe);color:#fff">🧠</div>
+        <div class="lt"><h4>${esc(r.title)}</h4><p>Score ${r.score}/${r.total} • ${esc(r.date)}</p></div>
+        <span class="badge live">${Math.round((r.score/r.total)*100)}%</span>
+      </div>`).join("")
+      : emptyState("🧠","No quiz results yet","Complete a quiz from the Learning tab to track progress.")}`;
+}
+
+/* ===================== 13. RENDER: PARENTS ============================= */
+function renderParents(){
+  const g = state.dailyGoal;
+
+  $("#parentsBody").innerHTML = `
+    <div class="notice">
+      👨‍👩‍👧 <b>Parents &amp; Guardians:</b> Boy Talk is designed for shared family use.
+      Please watch with younger children and use the settings below to adjust the experience.
+    </div>
+
+    <div class="sec-head"><h2><span class="dot"></span>Learning Progress</h2></div>
+    <div class="stat-grid">
+      <div class="stat"><div class="n">${g.done}/${g.target}</div><div class="l">TODAY'S GOAL</div></div>
+      <div class="stat"><div class="n">${Object.keys(state.progress).length}</div><div class="l">VIDEOS STARTED</div></div>
+      <div class="stat"><div class="n">${state.favorites.length}</div><div class="l">FAVORITES</div></div>
+      <div class="stat"><div class="n">${state.quizResults.length}</div><div class="l">QUIZZES</div></div>
+    </div>
+
+    <div class="sec-head"><h2><span class="dot"></span>Settings</h2></div>
+
+    <div class="setting">
+      <div class="li" style="width:44px;height:44px;border-radius:14px;background:var(--surface-3);display:grid;place-items:center;font-size:20px">🌙</div>
+      <div class="st"><h4>Dark Theme</h4><p>Easier on the eyes in low light.</p></div>
+      <div class="switch ${state.theme === "dark" ? "on" : ""}" data-toggle="theme"></div>
+    </div>
+
+    <div class="setting">
+      <div class="li" style="width:44px;height:44px;border-radius:14px;background:var(--surface-3);display:grid;place-items:center;font-size:20px">🌐</div>
+      <div class="st"><h4>Urdu (RTL) Interface</h4><p>Switch the interface between English and Urdu.</p></div>
+      <div class="switch ${state.lang === "ur" ? "on" : ""}" data-toggle="lang"></div>
+    </div>
+
+    <div class="setting">
+      <div class="li" style="width:44px;height:44px;border-radius:14px;background:var(--surface-3);display:grid;place-items:center;font-size:20px">🎯</div>
+      <div class="st"><h4>Daily Goal: ${g.target} videos</h4><p>Tap to change the daily target (1–10).</p></div>
+      <button class="mini-btn" data-goal="cycle" style="width:auto;padding:0 12px;font-weight:800">Change</button>
+    </div>
+
+    <div class="sec-head"><h2><span class="dot"></span>Child Safety Guidance</h2></div>
+    <div class="notice warn">
+      <b>Please note:</b>
+      <ul style="margin:10px 0 0 18px;line-height:1.7">
+        <li>Videos are played from YouTube. YouTube may show its own suggestions and ads inside the player.</li>
+        <li>Use YouTube Kids or your device's parental controls for stronger filtering.</li>
+        <li>This app does not show third-party advertising of its own.</li>
+        <li>Supervise children under 13 at all times while using the app.</li>
+        <li>Reading aloud uses your device's built-in text-to-speech — no audio is uploaded.</li>
+      </ul>
+    </div>
+
+    <div class="sec-head"><h2><span class="dot"></span>Information</h2></div>
+
+    <button class="list-row" style="width:100%;text-align:left" data-info="privacy">
+      <div class="li">🔒</div>
+      <div class="lt"><h4>Privacy Policy</h4><p>How data is handled — last updated ${SUPPORT.updated}</p></div>
+      <span class="chev">›</span>
+    </button>
+
+    <button class="list-row" style="width:100%;text-align:left" data-info="about">
+      <div class="li">ℹ️</div>
+      <div class="lt"><h4>About App</h4><p>Version, package name and credits</p></div>
+      <span class="chev">›</span>
+    </button>
+
+    <button class="list-row" style="width:100%;text-align:left" data-info="contact">
+      <div class="li">📞</div>
+      <div class="lt"><h4>Contact Support</h4><p>${SUPPORT.team}</p></div>
+      <span class="chev">›</span>
+    </button>
+
+    <button class="list-row" style="width:100%;text-align:left" data-info="data">
+      <div class="li">🗑</div>
+      <div class="lt"><h4>Reset Local Data</h4><p>Clear favorites, history and progress on this device</p></div>
+      <span class="chev">›</span>
+    </button>
+
+    <div class="sec-head"><h2><span class="dot"></span>App Owner</h2></div>
+    <button class="btn" id="openAdminBtn" style="border-style:dashed">🔐 Admin Login</button>
+    <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:10px;line-height:1.5">
+      Restricted area. Parents and children do not need an account.
+    </p>
+  `;
+}
+
+/* ===================== 14. REUSABLE UI PIECES ========================== */
+function emptyState(icon, title, text){
+  return `<div class="empty"><span class="e">${icon}</span><h4>${esc(title)}</h4><p>${esc(text)}</p></div>`;
+}
+
+/* ===================== 15. VIDEO PLAYER ================================ */
+function openVideo(videoId){
+  const v = getVideo(videoId);
+  if(!v){ toast("Video not found.", "err"); return; }
+
+  const ytId = v.youtubeId || extractYouTubeId(v.youtubeUrl);
+  if(!ytId){
+    toast("This video has an invalid YouTube link.", "err", 3200);
+    return;
+  }
+
+  ui.currentVideo = v;
+  ui.currentList = videosInCategory(v.category).length
+    ? videosInCategory(v.category)
+    : state.videos;
+
+  // Mark history + progress
+  state.history = [v.id, ...state.history.filter(id => id !== v.id)].slice(0, 30);
+  if(!state.progress[v.id]) state.progress[v.id] = 5;
+  bumpDailyGoal(v.id);
+  saveState();
+
+  $("#playerFrame").innerHTML =
+    `<iframe src="${embedUrl(ytId, true)}"
+       title="${esc(v.title)}"
+       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+       allowfullscreen></iframe>`;
+
+  $("#playerTitle").textContent = state.lang === "ur" && v.titleUr ? v.titleUr : v.title;
+  $("#playerCat").textContent = catIcon(v.category) + " " + catName(v.category);
+  $("#playerMeta").innerHTML =
+    `${v.duration ? `<span>⏱ ${esc(v.duration)}</span>` : ""}
+     <span>${progressOf(v.id)}% watched</span>
+     ${state.progress[v.id] >= 100 ? "<span>✅ Completed</span>" : ""}`;
+  $("#playerFav").textContent = state.favorites.includes(v.id) ? "♥" : "♡";
+  $("#playerFav").style.color = state.favorites.includes(v.id) ? "#ff4d88" : "#fff";
+
+  renderRelated(v);
+  openModal("playerModal");
+  renderHome();
+}
+
+function renderRelated(v){
+  const rel = state.videos.filter(x => x.id !== v.id && x.category === v.category).slice(0,6);
+  const fallback = state.videos.filter(x => x.id !== v.id).slice(0,6);
+  const list = rel.length ? rel : fallback;
+  $("#relatedList").innerHTML = list.length
+    ? list.map(x => `
+      <button class="rel-item" data-rel="${esc(x.id)}" style="width:100%;text-align:left">
+        <div class="rt">${thumbUrl(x) ? `<img src="${esc(thumbUrl(x))}" alt="" onerror="this.style.display='none'">` : catIcon(x.category)}</div>
+        <div class="rn"><h5>${esc(x.title)}</h5><p>${catIcon(x.category)} ${esc(catName(x.category))}</p></div>
+      </button>`).join("")
+    : `<p style="font-size:12px;opacity:.6">No related videos yet.</p>`;
+}
+
+function closePlayer(){
+  closeModal("playerModal");
+  $("#playerFrame").innerHTML = "";   // stops playback
+  ui.currentVideo = null;
+}
+
+function bumpDailyGoal(videoId){
+  const g = state.dailyGoal;
+  if(g.date !== todayKey()){ state.dailyGoal = { date: todayKey(), target:g.target, done:0 }; }
+  if(!g._counted) g._counted = [];
+  if(!g._counted.includes(videoId)){
+    g._counted.push(videoId);
+    g.done = g._counted.length;
+    state.dailyGoal = g;
+  }
+}
+
+/* ===================== 16. TEXT-TO-SPEECH ============================== */
+function speak(text, lang="en"){
+  if(!("speechSynthesis" in window)){
+    toast("Read-aloud is not supported on this device.", "err");
+    return;
+  }
+  try{
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang === "ur" ? "ur-PK" : "en-US";
+    u.rate = 0.85;
+    u.pitch = 1.1;
+    window.speechSynthesis.speak(u);
+  }catch(e){
+    toast("Could not read aloud on this device.", "err");
+  }
+}
+
+/* ===================== 17. QUIZ ENGINE ================================= */
+function startQuiz(key){
+  let quiz;
+  if(QUIZ_BANK[key]){
+    quiz = { id:key, title:QUIZ_BANK[key].title, qs:QUIZ_BANK[key].qs };
+  }else{
+    const v = getVideo(key);
+    if(v && v.quiz && v.quiz.length){
+      quiz = { id:v.id, title:v.title + " – Quiz", qs:v.quiz };
+    }
+  }
+  if(!quiz || !quiz.qs.length){ toast("No quiz available for this item yet.", "info"); return; }
+
+  ui.currentQuiz = quiz;
+  ui.quizIndex = 0;
+  ui.quizScore = 0;
+
+  $("#quizTitle").textContent = quiz.title;
+  $("#quizSub").textContent = `Question 1 of ${quiz.qs.length}`;
+  renderQuizQuestion();
+  openModal("quizModal");
+}
+
+function renderQuizQuestion(){
+  const quiz = ui.currentQuiz;
+  if(!quiz) return;
+  const q = quiz.qs[ui.quizIndex];
+  const letters = ["A","B","C","D","E"];
+
+  $("#quizSub").textContent = `Question ${ui.quizIndex + 1} of ${quiz.qs.length}`;
+  $("#quizBody").innerHTML = `
+    <h3 style="font-size:15px;margin-bottom:16px;line-height:1.5">${esc(q.q)}</h3>
+    <div id="quizOptions">
+      ${q.o.map((opt, i) => `
+        <button class="q-option" data-opt="${i}">
+          <span class="k">${letters[i] || i+1}</span>
+          <span>${esc(opt)}</span>
+        </button>`).join("")}
+    </div>
+    <div id="quizFeedback"></div>`;
+}
+
+function answerQuiz(optIndex){
+  const quiz = ui.currentQuiz;
+  const q = quiz.qs[ui.quizIndex];
+  const buttons = $$("#quizOptions .q-option");
+  buttons.forEach(b => b.disabled = true);
+
+  const correct = Number(q.a);
+  buttons[correct] && buttons[correct].classList.add("correct");
+
+  if(optIndex === correct){
+    ui.quizScore++;
+    $("#quizFeedback").innerHTML = `<div class="notice good">✅ Correct! Well done.</div>`;
+  }else{
+    buttons[optIndex] && buttons[optIndex].classList.add("wrong");
+    $("#quizFeedback").innerHTML = `<div class="notice warn">❌ Not quite. The correct answer is highlighted above.</div>`;
+  }
+
+  const isLast = ui.quizIndex === quiz.qs.length - 1;
+  $("#quizFeedback").innerHTML += `
+    <button class="btn btn-grad" id="quizNextBtn" style="margin-top:14px">
+      ${isLast ? "See My Score" : "Next Question →"}
+    </button>`;
+
+  $("#quizNextBtn").addEventListener("click", () => {
+    if(isLast) finishQuiz();
+    else { ui.quizIndex++; renderQuizQuestion(); }
+  });
+}
+
+function finishQuiz(){
+  const quiz = ui.currentQuiz;
+  const total = quiz.qs.length;
+  const score = ui.quizScore;
+  const pct = Math.round((score / total) * 100);
+
+  state.quizResults.push({
+    id: quiz.id,
+    title: quiz.title,
+    score, total,
+    date: new Date().toLocaleDateString()
+  });
+  state.quizResults = state.quizResults.slice(-50);
+  saveState();
+
+  $("#quizBody").innerHTML = `
+    <div style="text-align:center;padding:14px 0 4px">
+      <div style="font-size:56px">${pct >= 80 ? "🏆" : pct >= 50 ? "👍" : "💪"}</div>
+      <h3 style="margin-top:10px;font-size:20px">${score} / ${total}</h3>
+      <p style="color:var(--muted);font-size:13px;margin-top:6px">${pct}% correct</p>
+      <p style="color:var(--muted);font-size:12.5px;margin-top:12px;line-height:1.6">
+        ${pct >= 80 ? "Excellent work! Keep it up." :
+          pct >= 50 ? "Good effort! Try again to improve." :
+                      "Keep practising — you will get better!"}
+      </p>
+    </div>
+    <button class="btn btn-grad" id="quizRestart" style="margin-top:16px">🔄 Try Again</button>
+    <button class="btn" id="quizDone" style="margin-top:10px">Close</button>`;
+
+  $("#quizRestart").addEventListener("click", () => startQuiz(quiz.id));
+  $("#quizDone").addEventListener("click", () => closeModal("quizModal"));
+  renderMyList();
+}
+
+/* ===================== 18. INFO SHEETS ================================= */
+function openInfo(kind){
+  const title = $("#infoTitle");
+  const body  = $("#infoBody");
+
+  if(kind === "privacy"){
+    title.textContent = "🔒 Privacy Policy";
+    body.innerHTML = privacyPolicyHTML();
+  }else if(kind === "about"){
+    title.textContent = "ℹ️ About " + SUPPORT.appName;
+    body.innerHTML = aboutHTML();
+  }else if(kind === "contact"){
+    title.textContent = "📞 Contact Support";
+    body.innerHTML = contactHTML();
+  }else if(kind === "data"){
+    title.textContent = "🗑 Reset Local Data";
+    body.innerHTML = `
+      <p class="sub">This clears favorites, watch history, learning progress and quiz results
+      stored on <b>this device</b>. It does not delete anything stored in Firebase.</p>
+      <button class="btn btn-red" id="confirmReset">Delete Local Data</button>
+      <button class="btn" id="cancelReset" style="margin-top:10px">Cancel</button>`;
+    $("#confirmReset").addEventListener("click", () => {
+      try{
+        localStorage.removeItem(LS_KEY);
+        localStorage.removeItem(LS_CATS);
+      }catch(e){}
+      state.favorites = []; state.history = []; state.progress = {};
+      state.quizResults = []; state.customCategories = [];
+      state.dailyGoal = { date: todayKey(), target:3, done:0 };
+      toast("Local data cleared.", "ok");
+      closeModal("infoModal");
+      renderParents(); renderHome();
+    });
+    $("#cancelReset").addEventListener("click", () => closeModal("infoModal"));
+  }
+
+  openModal("infoModal");
+}
+
+function privacyPolicyHTML(){
+  return `
+  <p class="updated">Last Updated: ${SUPPORT.updated}</p>
+  <div class="policy">
+    <p>This Privacy Policy explains how <b>${SUPPORT.appName}</b> ("the App") handles information.
+    The App is intended for use by children under the supervision of a parent or guardian.</p>
+
+    <h4>1. Information We Collect</h4>
+    <p>The App itself does not ask children for names, addresses, photographs or contact details.
+    The following information may be processed:</p>
+    <ul>
+      <li><b>Stored on your device only:</b> favorites, watch history, learning progress,
+      daily goal counts, quiz scores, theme and language preferences. These are kept in your
+      browser's local storage and are not transmitted anywhere by the App.</li>
+      <li><b>Firebase (Cloud Firestore &amp; Firebase Authentication):</b> video records,
+      categories and administrator account data are stored in Google Cloud Firestore.
+      Administrator sign-in is handled by Firebase Authentication (email address and an
+      encrypted password).</li>
+      <li><b>Technical data:</b> like most online services, Google Firebase may process IP address,
+      device type and basic diagnostic information in order to operate and secure the service.</li>
+    </ul>
+
+    <h4>2. How Information Is Used</h4>
+    <ul>
+      <li>To remember preferences and learning progress on your device.</li>
+      <li>To display the video catalogue to all users.</li>
+      <li>To allow the app owner to add, edit or remove learning videos.</li>
+      <li>To keep the service secure and prevent unauthorised administrative access.</li>
+    </ul>
+
+    <h4>3. Firebase Services and Data Storage</h4>
+    <p>Data is stored on Google Firebase infrastructure (Cloud Firestore and Firebase
+    Authentication). Google's privacy practices apply to that processing. Firebase services
+    are provided by Google LLC. Data may be stored on servers outside your country.</p>
+
+    <h4>4. Children's Privacy and Parental Supervision</h4>
+    <p>The App is designed for young children to use <b>together with a parent or guardian</b>.
+    We do not knowingly collect personal information from children. The App contains no
+    social features, no chat, no user-to-user messaging and no public profiles.
+    Parents and guardians are encouraged to supervise use, set device-level parental
+    controls and review this policy together with their child.</p>
+
+    <h4>5. YouTube Embedded Content</h4>
+    <p>Learning videos are played through the YouTube embedded player
+    (youtube-nocookie.com). When a video plays, YouTube/Google may set cookies or process
+    device information under its own privacy policy. The App does not control YouTube's
+    content, recommendations or advertising shown inside the player. Please review
+    Google's Privacy Policy and the YouTube Terms of Service for details.</p>
+
+    <h4>6. Data Retention and Deletion</h4>
+    <p>Locally stored data remains on your device until you clear it. You can delete it at any
+    time using <b>Parents → Reset Local Data</b>, or by clearing the app's storage in your
+    device settings. To request deletion of data held in Firebase (for example, an
+    administrator account), contact us using the details below.</p>
+
+    <h4>7. Security Limitations</h4>
+    <p>We take reasonable measures to protect data, including using Firebase Authentication and
+    Firestore Security Rules for administrative operations. However, no method of electronic
+    storage or transmission is completely secure, and we cannot guarantee absolute security.</p>
+
+    <h4>8. No Advertising or In-App Purchases</h4>
+    <p>The App does not contain third-party advertising, in-app purchases or subscription
+    paywalls of its own. Any advertising or promotional content shown by the YouTube player
+    is controlled by YouTube, not by this App.</p>
+
+    <h4>9. Changes to This Policy</h4>
+    <p>This policy may be updated from time to time. The "Last Updated" date at the top will
+    reflect the most recent revision.</p>
+
+    <h4>10. Contact Us</h4>
+    <p>
+      <b>${SUPPORT.team}</b><br>
+      Email: <a href="mailto:${SUPPORT.email}">${SUPPORT.email}</a><br>
+      WhatsApp: <a href="https://wa.me/${SUPPORT.whatsappIntl}" target="_blank" rel="noopener">${SUPPORT.whatsapp}</a><br>
+      Address: ${SUPPORT.address}
+    </p>
+  </div>`;
+}
+
+function aboutHTML(){
+  return `
+  <div class="policy">
+    <p><b>${SUPPORT.appName}</b> is a free, family-friendly learning app for young children.
+    It brings together alphabet practice, numbers, colours, shapes, animals, nursery rhymes,
+    stories, basic mathematics, general knowledge, science, good habits and Islamic learning
+    in one colourful, easy-to-use place.</p>
+
+    <h4>App Information</h4>
+    <ul>
+      <li><b>App name:</b> ${SUPPORT.appName}</li>
+      <li><b>Suggested Android package name:</b> ${SUPPORT.packageName}</li>
+      <li><b>Version:</b> 1.0.0</li>
+      <li><b>Price:</b> Free — no in-app purchases</li>
+      <li><b>Supported languages:</b> English and Urdu (RTL)</li>
+      <li><b>Data backend:</b> Firebase Cloud Firestore (videos) + Firebase Authentication (admin)</li>
+    </ul>
+
+    <h4>App Icon Design Guidance</h4>
+    <ul>
+      <li>Use a rounded-square icon with a bright purple-to-pink gradient background.</li>
+      <li>Place a simple, friendly child face or a smiling rocket in the centre.</li>
+      <li>Keep the artwork flat, bold and readable at small sizes (no thin details).</li>
+      <li>Export at 512 × 512 px PNG (32-bit) for Google Play, plus adaptive icon layers.</li>
+      <li>Avoid text inside the icon and avoid using YouTube or Google branding.</li>
+    </ul>
+
+    <h4>Google Play Readiness Checklist</h4>
+    <ul>
+      <li>Android Studio project with the package name above.</li>
+      <li>Signed Android App Bundle (.aab) for release.</li>
+      <li>A publicly accessible privacy policy URL.</li>
+      <li>Correct target SDK level and Play Console data-safety declarations.</li>
+      <li>Declare the "Designed for Families" / child-directed content settings where applicable.</li>
+    </ul>
+
+    <div class="notice warn" style="margin-top:14px">
+      <b>Important:</b> An HTML file alone does not create an Android package and cannot
+      guarantee Google Play approval. The Android Studio project configuration, signing,
+      target SDK, store listing assets and Play Console declarations must be completed
+      separately by the developer.
+    </div>
+
+    <h4>Credits</h4>
+    <p>Developed and maintained by ${SUPPORT.team}. Learning videos are hosted on YouTube
+    and embedded through the official YouTube player.</p>
+  </div>`;
+}
+
+function contactHTML(){
+  return `
+  <p class="sub">We usually reply within 1–2 working days.</p>
+  <div class="policy">
+    <p><b>Support Team:</b> ${SUPPORT.team}</p>
+    <p><b>Email:</b><br><a href="mailto:${SUPPORT.email}?subject=Boy%20Talk%20Support%20Request">${SUPPORT.email}</a></p>
+    <p><b>WhatsApp:</b><br><a href="https://wa.me/${SUPPORT.whatsappIntl}" target="_blank" rel="noopener">${SUPPORT.whatsapp}</a></p>
+    <p><b>Address:</b><br>${SUPPORT.address}</p>
+  </div>
+  <a class="btn btn-grad" href="mailto:${SUPPORT.email}?subject=Boy%20Talk%20Support%20Request"
+     style="text-decoration:none;margin-top:6px">✉️ Send Email</a>
+  <a class="btn btn-green" href="https://wa.me/${SUPPORT.whatsappIntl}" target="_blank" rel="noopener"
+     style="text-decoration:none;margin-top:10px">💬 Chat on WhatsApp</a>`;
+}
+
+/* ===================== 19. ADMIN PANEL ================================= */
+
+function openAdminLogin(){
+  const body = $("#adminLoginBody");
+  if(!body) return;
+
+  /* Already signed in? Go straight to the dashboard. */
+  if(state.isAdmin){
+    closeModal("adminLoginModal");
+    openAdminPanel();
+    return;
+  }
+
+  /* If Firebase failed to initialize, show a clear error and a Back button. */
+  if(!fb.ready){
+    body.innerHTML = `
+      <div class="notice err">
+        ❌ <b>Firebase could not be initialized.</b><br>
+        ${esc(fb.error && fb.error.message ? fb.error.message : "Please check the FIREBASE_CONFIG at the top of the file and your internet connection.")}
+      </div>
+      <button type="button" class="btn" id="adminLoginBack">← Back</button>`;
+    const backBtn = $("#adminLoginBack");
+    if(backBtn) backBtn.addEventListener("click", () => closeModal("adminLoginModal"));
+    openModal("adminLoginModal");
+    return;
+  }
+
+  body.innerHTML = `
+    <div class="notice good">🔐 Sign in with your <b>Firebase Authentication</b> admin email and password.</div>
+
+    <div class="field">
+      <label>Admin Email</label>
+      <input type="email" id="adminEmail" placeholder="admin@example.com"
+             autocomplete="username" inputmode="email" />
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="adminPass" placeholder="••••••••"
+             autocomplete="current-password" />
+    </div>
+
+    <div id="adminLoginMsg"></div>
+
+    <button type="button" class="btn btn-grad" id="adminLoginGo">🔓 Login</button>
+    <button type="button" class="btn" id="adminLoginBack" style="margin-top:10px">← Back</button>
+
+    <p class="hint" style="text-align:center;margin-top:12px">
+      Only create administrator accounts in Firebase Authentication.
+      Regular parents and children never need to log in.
+    </p>
+  `;
+
+  const goBtn   = $("#adminLoginGo");
+  const backBtn = $("#adminLoginBack");
+  const passEl  = $("#adminPass");
+  const emailEl = $("#adminEmail");
+
+  if(goBtn)   goBtn.addEventListener("click", doAdminLogin);
+  if(backBtn) backBtn.addEventListener("click", () => closeModal("adminLoginModal"));
+  if(passEl)  passEl.addEventListener("keydown", e => { if(e.key === "Enter") doAdminLogin(); });
+  if(emailEl) emailEl.addEventListener("keydown", e => { if(e.key === "Enter") doAdminLogin(); });
+
+  openModal("adminLoginModal");
+
+  setTimeout(() => { if(emailEl) try{ emailEl.focus({ preventScroll:true }); }catch(e){} }, 120);
+}
+
+async function doAdminLogin(){
+  const msg    = $("#adminLoginMsg");
+  const pass   = ($("#adminPass")  && $("#adminPass").value)  || "";
+  const email  = ($("#adminEmail") && $("#adminEmail").value) || "";
+
+  const showError = (html) => { if(msg) msg.innerHTML = `<div class="notice err">${html}</div>`; };
+  const clearError = () => { if(msg) msg.innerHTML = ""; };
+
+  clearError();
+
+  if(!fb.ready){
+    showError("❌ Firebase is not initialized. Check the FIREBASE_CONFIG and reload the page.");
+    return;
+  }
+  if(!email || !email.includes("@")){
+    showError("Please enter a valid admin email address.");
+    return;
+  }
+  if(!pass){
+    showError("Please enter your password.");
+    return;
+  }
+
+  const goBtn = $("#adminLoginGo");
+  if(goBtn){ goBtn.disabled = true; goBtn.textContent = "Signing in…"; }
+
+  try{
+    const cred = await signInWithEmailAndPassword(fb.auth, email, pass);
+    state.isAdmin    = true;
+    state.adminEmail = cred && cred.user ? cred.user.email : email;
+
+    closeModal("adminLoginModal");
+    openAdminPanel();
+    toast("Signed in as " + state.adminEmail, "ok", 3200);
+  }catch(err){
+    console.warn("[Boy Talk] Admin sign-in failed:", err);
+    const code = (err && err.code) || "";
+    let friendly = "Sign-in failed. Please check your email and password.";
+
+    if(code === "auth/user-not-found")             friendly = "No admin account found with that email address.";
+    else if(code === "auth/wrong-password")        friendly = "Incorrect password. Please try again.";
+    else if(code === "auth/invalid-credential")    friendly = "Incorrect email or password.";
+    else if(code === "auth/invalid-email")         friendly = "That email address is not valid.";
+    else if(code === "auth/user-disabled")         friendly = "This account has been disabled.";
+    else if(code === "auth/too-many-requests")     friendly = "Too many failed attempts. Please wait a moment and try again.";
+    else if(code === "auth/network-request-failed")friendly = "Network error. Check your internet connection and try again.";
+    else if(code === "auth/operation-not-allowed") friendly = "Email/Password sign-in is not enabled in Firebase Authentication.";
+    else if(code === "auth/api-key-not-valid" || code === "auth/invalid-api-key")
+                                                   friendly = "Firebase API key is not valid. Check FIREBASE_CONFIG.";
+    else if(err && err.message)                    friendly = err.message;
+
+    showError("❌ " + esc(friendly));
+    toast(friendly, "err", 3800);
+  }finally{
+    if(goBtn){ goBtn.disabled = false; goBtn.innerHTML = "🔓 Login"; }
+  }
+}
+
+async function doAdminLogout(){
+  try{ if(fb.ready) await signOut(fb.auth); }catch(e){}
+  state.isAdmin = false;
+  state.adminEmail = null;
+  $("#adminPanel").classList.remove("open");
+  renderParents();
+  toast("Signed out.", "ok");
+}
+
+function openAdminPanel(){
+  const panel = $("#adminPanel");
+  panel.classList.add("open");
+  const badge = $("#adminModeBadge");
+  badge.textContent = "LIVE";
+  badge.className = "badge live";
+  renderAdmin();
+  window.scrollTo(0,0);
+}
+
+function renderAdmin(){
+  renderAdminStats();
+  const body = $("#adminBody");
+  $$("#adminTabs .atab").forEach(b => b.classList.toggle("active", b.dataset.atab === ui.adminTab));
+
+  if(ui.adminTab === "videos")     body.innerHTML = adminVideosHTML();
+  if(ui.adminTab === "add")        body.innerHTML = adminFormHTML();
+  if(ui.adminTab === "categories") body.innerHTML = adminCategoriesHTML();
+  if(ui.adminTab === "settings")   body.innerHTML = adminSettingsHTML();
+
+  if(ui.adminTab === "videos"){
+    const search = $("#adminSearch");
+    const filter = $("#adminFilter");
+    if(search) search.addEventListener("input", () => renderAdminVideoList());
+    if(filter) filter.addEventListener("change", () => renderAdminVideoList());
+    renderAdminVideoList();
+  }
+  if(ui.adminTab === "add"){
+    const form = $("#videoForm");
+    if(form) form.addEventListener("submit", onSaveVideo);
+    const cancelEdit = $("#cancelEdit");
+    if(cancelEdit) cancelEdit.addEventListener("click", () => {
+      ui.editId = null;
+      ui.adminTab = "videos";
+      renderAdmin();
+    });
+    if(ui.editId){
+      const v = getVideo(ui.editId);
+      if(v) fillVideoForm(v);
+    }
+  }
+  if(ui.adminTab === "categories"){
+    const cf = $("#catForm");
+    if(cf) cf.addEventListener("submit", onAddCategory);
+  }
+  if(ui.adminTab === "settings"){
+    const rb = $("#reloadBtn");
+    if(rb) rb.addEventListener("click", async () => {
+      toast("Reloading videos from Firestore…", "info");
+      try{
+        state.loadingVideos = true; state.loadError = null;
+        const list = await fetchVideosFromFirestore();
+        state.videos = list;
+        state.loadingVideos = false;
+        renderAdmin(); renderHome();
+        toast(`Loaded ${list.length} video(s) from Firestore.`, "ok");
+      }catch(err){
+        state.loadingVideos = false;
+        state.loadError = err && err.message ? err.message : "Unknown Firestore error.";
+        renderAdmin(); renderHome();
+        toast("Reload failed: " + state.loadError, "err", 3600);
+      }
+    });
+  }
+}
+
+function renderAdminStats(){
+  const total = state.videos.length;
+  const cats = allCategories().length;
+  const featured = state.videos.filter(v => v.featured).length;
+  const withQuiz = state.videos.filter(v => v.quiz && v.quiz.length).length;
+  $("#adminStats").innerHTML = `
+    <div class="stat"><div class="n">${total}</div><div class="l">TOTAL VIDEOS</div></div>
+    <div class="stat"><div class="n">${cats}</div><div class="l">CATEGORIES</div></div>
+    <div class="stat"><div class="n">${featured}</div><div class="l">FEATURED</div></div>
+    <div class="stat"><div class="n">${withQuiz}</div><div class="l">WITH QUIZ</div></div>`;
+}
+
+function adminVideosHTML(){
+  return `
+    <div class="notice good">
+      ✅ Connected to Firebase Firestore — changes are saved to the <b>videos</b> collection
+      and will appear for every user of the app.
+    </div>
+    <div class="field"><label>Search videos</label><input type="search" id="adminSearch" placeholder="Search by title or category…"></div>
+    <div class="field"><label>Filter by category</label>
+      <select id="adminFilter">
+        <option value="">All categories</option>
+        ${allCategories().map(c => `<option value="${esc(c.id)}">${c.icon} ${esc(c.name)}</option>`).join("")}
+      </select>
+    </div>
+    <div id="adminVideoList"></div>`;
+}
+
+function renderAdminVideoList(){
+  const term = (($("#adminSearch") && $("#adminSearch").value) || "").trim().toLowerCase();
+  const cat  = ($("#adminFilter") && $("#adminFilter").value) || "";
+  const list = state.videos.filter(v =>
+    (!cat || v.category === cat) &&
+    (!term || (v.title || "").toLowerCase().includes(term) || (v.titleUr || "").includes(term))
+  );
+
+  const box = $("#adminVideoList");
+  if(!box) return;
+
+  box.innerHTML = list.length
+    ? `<p style="font-size:12px;color:var(--muted);margin-bottom:10px">${list.length} video(s)</p>` +
+      list.map(v => `
+      <div class="admin-video-row">
+        <div class="at">${thumbUrl(v) ? `<img src="${esc(thumbUrl(v))}" alt="" onerror="this.style.display='none'">` : catIcon(v.category)}</div>
+        <div class="am">
+          <h5>${esc(v.title)}</h5>
+          <p>${catIcon(v.category)} ${esc(catName(v.category))}${v.featured ? " • ⭐ Featured" : ""}${(v.quiz && v.quiz.length) ? " • 🧠 " + v.quiz.length + "Q" : ""}</p>
+        </div>
+        <div class="acts">
+          <button class="mini-btn" data-edit="${esc(v.id)}" title="Edit">✏️</button>
+          <button class="mini-btn del" data-del="${esc(v.id)}" title="Delete">🗑</button>
+        </div>
+      </div>`).join("")
+    : emptyState("📭","No videos match","Try a different search or add a new video from the Add / Edit tab.");
+}
+
+function adminFormHTML(){
+  const editing = ui.editId && getVideo(ui.editId);
+  return `
+    <div class="notice good">Saving writes directly to Firestore — all users will see the change immediately.</div>
+    <h3 style="font-size:15px;margin-bottom:14px">${editing ? "✏️ Edit Video" : "➕ Add New Video"}</h3>
+    <form id="videoForm">
+      <div class="field">
+        <label>Video Title (English) *</label>
+        <input type="text" id="f_title" required placeholder="ABC Alphabet Song for Kids">
+      </div>
+      <div class="field">
+        <label>Video Title (Urdu)</label>
+        <input type="text" id="f_titleUr" placeholder="اے بی سی حروف تہجی گیت" dir="rtl">
+      </div>
+      <div class="field">
+        <label>Description</label>
+        <textarea id="f_desc" placeholder="A short description of the video."></textarea>
+      </div>
+      <div class="field">
+        <label>Category *</label>
+        <select id="f_category" required>
+          ${allCategories().map(c => `<option value="${esc(c.id)}">${c.icon} ${esc(c.name)}</option>`).join("")}
+        </select>
+      </div>
+      <div class="field">
+        <label>YouTube Link or Video ID *</label>
+        <input type="text" id="f_url" required placeholder="https://www.youtube.com/watch?v=XXXXXXXXXXX">
+        <div class="hint">Supported: youtube.com/watch?v=…, youtu.be/…, /embed/…, /shorts/…, or a raw 11-character ID.</div>
+      </div>
+      <div class="field">
+        <label>Custom Thumbnail URL (optional)</label>
+        <input type="url" id="f_thumb" placeholder="https://…  (leave empty to use the YouTube thumbnail)">
+      </div>
+      <div class="field">
+        <label>Duration (optional)</label>
+        <input type="text" id="f_duration" placeholder="3:45">
+      </div>
+      <div class="check-row" style="margin-bottom:13px">
+        <input type="checkbox" id="f_featured">
+        <span>⭐ Mark as Featured (shown on the Home screen)</span>
+      </div>
+      <div class="field">
+        <label>Quiz Questions (optional)</label>
+        <textarea id="f_quiz" placeholder="Question|Option 1|Option 2|Option 3|CorrectIndex(0-2)"></textarea>
+        <div class="hint">
+          One question per line. Example:<br>
+          What comes after A?|B|C|D|0<br>
+          How many letters are in the alphabet?|24|26|28|1
+        </div>
+      </div>
+      <div id="formMsg"></div>
+      <button type="submit" class="btn btn-grad">${editing ? "💾 Update Video" : "💾 Save Video"}</button>
+      ${editing ? `<button type="button" class="btn" id="cancelEdit" style="margin-top:10px">Cancel Edit</button>` : ""}
+    </form>`;
+}
+
+function fillVideoForm(v){
+  const set = (id, val) => { const el = $("#" + id); if(el) el.value = val == null ? "" : val; };
+  set("f_title", v.title);
+  set("f_titleUr", v.titleUr);
+  set("f_desc", v.description);
+  set("f_category", v.category);
+  set("f_url", v.youtubeUrl || v.youtubeId || "");
+  set("f_thumb", v.thumbnail);
+  set("f_duration", v.duration);
+  const f = $("#f_featured"); if(f) f.checked = !!v.featured;
+  const quizText = (v.quiz || []).map(q => [q.q, ...q.o, q.a].join("|")).join("\n");
+  set("f_quiz", quizText);
+}
+
+function parseQuizText(text){
+  const out = [];
+  if(!text) return out;
+  text.split("\n").forEach(line => {
+    const parts = line.split("|").map(s => s.trim());
+    if(parts.length >= 4 && parts[0]){
+      const correct = parseInt(parts[parts.length - 1], 10);
+      const options = parts.slice(1, parts.length - 1).filter(Boolean);
+      if(options.length >= 2 && !isNaN(correct) && correct >= 0 && correct < options.length){
+        out.push({ q: parts[0], o: options, a: correct });
+      }
+    }
+  });
+  return out;
+}
+
+async function onSaveVideo(e){
+  e.preventDefault();
+  const msg = $("#formMsg");
+
+  const title = $("#f_title").value.trim();
+  const rawUrl = $("#f_url").value.trim();
+  const ytId = extractYouTubeId(rawUrl);
+
+  if(!title){ msg.innerHTML = `<div class="notice warn">Please enter a video title.</div>`; return; }
+  if(!ytId){
+    msg.innerHTML = `<div class="notice err">❌ Invalid YouTube link. Please check the URL and try again.</div>`;
+    toast("Invalid YouTube link.", "err");
+    return;
+  }
+
+  const data = {
+    title,
+    titleUr: $("#f_titleUr").value.trim(),
+    description: $("#f_desc").value.trim(),
+    category: $("#f_category").value,
+    youtubeUrl: rawUrl,
+    youtubeId: ytId,
+    thumbnail: $("#f_thumb").value.trim(),
+    duration: $("#f_duration").value.trim(),
+    featured: $("#f_featured").checked,
+    quiz: parseQuizText($("#f_quiz").value),
+    updatedAt: Date.now()
+  };
+
+  const isEdit = !!ui.editId;
+  const id = isEdit ? ui.editId : uid("vid");
+
+  const submitBtn = $("#videoForm button[type=submit]");
+  if(submitBtn){ submitBtn.disabled = true; submitBtn.textContent = "Saving…"; }
+
+  try{
+    await saveVideoToFirestore(id, data);
+
+    const idx = state.videos.findIndex(v => v.id === id);
+    if(idx >= 0) state.videos[idx] = Object.assign({ id }, data);
+    else state.videos.unshift(Object.assign({ id }, data));
+
+    toast(isEdit ? "Video updated in Firestore." : "Video saved to Firestore.", "ok");
+    ui.editId = null;
+    ui.adminTab = "videos";
+    renderAdmin();
+    renderHome();
+  }catch(err){
+    console.error("[Boy Talk] Save failed:", err);
+    const msgText = (err && err.message) ? err.message : "unknown error";
+    msg.innerHTML = `<div class="notice err">❌ Could not save: ${esc(msgText)}</div>`;
+    toast("Save failed. Check Firestore rules and your sign-in.", "err", 3800);
+  }finally{
+    if(submitBtn){ submitBtn.disabled = false; submitBtn.textContent = isEdit ? "💾 Update Video" : "💾 Save Video"; }
+  }
+}
+
+function confirmDeleteVideo(id){
+  const v = getVideo(id);
+  if(!v) return;
+
+  $("#infoTitle").textContent = "🗑 Delete Video";
+  $("#infoBody").innerHTML = `
+    <p class="sub">Are you sure you want to delete <b>${esc(v.title)}</b> from Firestore?
+    This action cannot be undone.</p>
+    <button class="btn btn-red" id="doDelete">Yes, Delete</button>
+    <button class="btn" id="cancelDelete" style="margin-top:10px">Cancel</button>`;
+  openModal("infoModal");
+
+  $("#cancelDelete").addEventListener("click", () => closeModal("infoModal"));
+  $("#doDelete").addEventListener("click", async () => {
+    const btn = $("#doDelete");
+    if(btn){ btn.disabled = true; btn.textContent = "Deleting…"; }
+    try{
+      await deleteVideoFromFirestore(id);
+      state.videos = state.videos.filter(x => x.id !== id);
+      toast("Video deleted from Firestore.", "ok");
+      closeModal("infoModal");
+      renderAdmin();
+      renderHome();
+    }catch(err){
+      console.error("[Boy Talk] Delete failed:", err);
+      toast("Delete failed: " + ((err && err.message) || "unknown error"), "err", 3800);
+      if(btn){ btn.disabled = false; btn.textContent = "Yes, Delete"; }
+    }
+  });
+}
+
+function adminCategoriesHTML(){
+  return `
+    <div class="notice">
+      Categories group your videos. Thirteen default categories are built in.
+      Any category you add here is stored on this device and applied locally.
+    </div>
+    <h3 style="font-size:15px;margin-bottom:12px">Existing Categories</h3>
+    ${allCategories().map(c => {
+      const count = videosInCategory(c.id).length;
+      const custom = (state.customCategories || []).some(x => x.id === c.id);
+      return `<div class="list-row">
+        <div class="li" style="background:${c.color};color:#fff">${c.icon}</div>
+        <div class="lt"><h4>${esc(c.name)} ${custom ? "• custom" : ""}</h4><p>${count} video(s) • id: ${esc(c.id)}</p></div>
+        ${custom ? `<button class="mini-btn del" data-delcat="${esc(c.id)}">🗑</button>` : `<span class="badge live">built-in</span>`}
+      </div>`;
+    }).join("")}
+
+    <h3 style="font-size:15px;margin:20px 0 12px">➕ Add Custom Category</h3>
+    <form id="catForm">
+      <div class="field"><label>Category Name (English) *</label><input type="text" id="c_name" required placeholder="Art & Drawing"></div>
+      <div class="field"><label>Category Name (Urdu)</label><input type="text" id="c_nameUr" dir="rtl" placeholder="فن اور ڈرائنگ"></div>
+      <div class="field"><label>Icon (emoji)</label><input type="text" id="c_icon" placeholder="🎨" maxlength="4"></div>
+      <button type="submit" class="btn btn-grad">Add Category</button>
+    </form>`;
+}
+
+function onAddCategory(e){
+  e.preventDefault();
+  const name = $("#c_name").value.trim();
+  if(!name){ toast("Enter a category name.", "err"); return; }
+  const id = "custom-" + name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  if(allCategories().some(c => c.id === id)){ toast("That category already exists.", "err"); return; }
+
+  state.customCategories = state.customCategories || [];
+  state.customCategories.push({
+    id,
+    name,
+    nameUr: $("#c_nameUr").value.trim(),
+    icon: $("#c_icon").value.trim() || "📚",
+    color: "linear-gradient(135deg,#6c5ce7,#4fc3f7)"
+  });
+  saveCustomCategories();
+  saveState();
+  toast("Category added.", "ok");
+  renderAdmin();
+  renderHome();
+}
+
+function adminSettingsHTML(){
+  return `
+    <div class="notice good">
+      <b>Data source:</b> Firebase Cloud Firestore (project <code>${esc(FIREBASE_CONFIG.projectId)}</code>)
+    </div>
+
+    <div class="list-row">
+      <div class="li">👤</div>
+      <div class="lt"><h4>Signed in as</h4><p>${esc(state.adminEmail || "—")}</p></div>
+    </div>
+
+    <div class="list-row">
+      <div class="li">📹</div>
+      <div class="lt"><h4>Videos loaded</h4><p>${state.videos.length} record(s) in memory</p></div>
+    </div>
+
+    <button class="btn btn-grad" id="reloadBtn" style="margin-top:8px">🔄 Reload Videos from Firestore</button>
+
+    <div class="sec-head"><h2><span class="dot"></span>Firestore Security Rules</h2></div>
+    <div class="notice">
+      <b>Publish these rules in Firebase Console → Firestore → Rules.</b>
+      They are what actually protect your data — never rely on front-end passwords.
+      <pre style="white-space:pre-wrap;font-size:11px;margin-top:10px;line-height:1.55;background:var(--surface-3);padding:12px;border-radius:12px;overflow-x:auto">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Anyone (including the app) may READ the video catalogue.
+    match /videos/{videoId} {
+      allow read: if true;
+      // Only signed-in administrators may create, update or delete.
+      allow write: if request.auth != null;
+    }
+  }
+}</pre>
+      <p style="margin-top:10px">For stronger protection, use a custom claim:
+      <code>allow write: if request.auth.token.admin == true;</code>
+      and set the claim on your admin user with the Firebase Admin SDK.</p>
+    </div>
+
+    <div class="sec-head"><h2><span class="dot"></span>Session</h2></div>
+    <button class="btn btn-red" id="adminLogoutBtn">🚪 Log Out of Admin</button>`;
+}
+
+/* ===================== 20. GLOBAL EVENT WIRING ========================= */
+document.addEventListener("click", async (e) => {
+  const target = e.target;
+
+  /* --- Admin panel triggers --- */
+  if(target.closest("#openAdminBtn")){ openAdminLogin(); return; }
+  if(target.closest("#adminClose")){ $("#adminPanel").classList.remove("open"); return; }
+  if(target.closest("#adminLogoutBtn")){ doAdminLogout(); return; }
+
+  /* --- Retry load (shown when Firestore read fails on Home) --- */
+  if(target.closest("#retryLoad")){
+    toast("Retrying…", "info");
+    try{
+      state.loadingVideos = true; state.loadError = null;
+      renderHome();
+      const list = await fetchVideosFromFirestore();
+      state.videos = list;
+      state.loadingVideos = false;
+      state.loadError = null;
+      renderHome();
+      toast(`Loaded ${list.length} video(s).`, "ok");
+    }catch(err){
+      state.loadingVideos = false;
+      state.loadError = err && err.message ? err.message : "Unknown Firestore error.";
+      renderHome();
+      toast("Still failing: " + state.loadError, "err", 3600);
+    }
+    return;
+  }
+
+  /* --- Bottom navigation --- */
+  const navBtn = target.closest(".nav-btn");
+  if(navBtn){ showScreen(navBtn.dataset.screen); return; }
+
+  /* --- "See all" / goto links --- */
+  const goto = target.closest("[data-goto]");
+  if(goto){ showScreen(goto.dataset.goto); return; }
+
+  /* --- Favorite toggle --- */
+  const favBtn = target.closest("[data-fav]");
+  if(favBtn){
+    e.stopPropagation();
+    const id = favBtn.dataset.fav;
+    const idx = state.favorites.indexOf(id);
+    if(idx >= 0){ state.favorites.splice(idx,1); toast("Removed from favorites.", "info"); }
+    else{ state.favorites.unshift(id); toast("Added to favorites ❤️", "ok"); }
+    saveState();
+    renderHome(); renderMyList();
+    if(ui.currentVideo && ui.currentVideo.id === id){
+      $("#playerFav").textContent = state.favorites.includes(id) ? "♥" : "♡";
+      $("#playerFav").style.color = state.favorites.includes(id) ? "#ff4d88" : "#fff";
+    }
+    return;
+  }
+
+  /* --- Open a video card --- */
+  const card = target.closest("[data-vid]");
+  if(card && !target.closest("[data-fav]")){
+    openVideo(card.dataset.vid);
+    return;
+  }
+
+  /* --- Category chip / card --- */
+  const catEl = target.closest("[data-cat]");
+  if(catEl){
+    showScreen("explore");
+    setTimeout(() => renderCategoryDetail(catEl.dataset.cat), 60);
+    return;
+  }
+
+  /* --- Quiz start --- */
+  const quizBtn = target.closest("[data-quiz]");
+  if(quizBtn){ startQuiz(quizBtn.dataset.quiz); return; }
+
+  /* --- Quiz option --- */
+  const optBtn = target.closest(".q-option");
+  if(optBtn && !optBtn.disabled){ answerQuiz(Number(optBtn.dataset.opt)); return; }
+
+  /* --- Read aloud flashcard --- */
+  const speakBtn = target.closest("[data-speak]");
+  if(speakBtn){ speak(speakBtn.dataset.speak, speakBtn.dataset.lang || "en"); return; }
+
+  /* --- Learning tabs --- */
+  const ltab = target.closest("[data-ltab]");
+  if(ltab){
+    $$("#learnTabs .tab").forEach(b => b.classList.remove("active"));
+    ltab.classList.add("active");
+    ui.learningTab = ltab.dataset.ltab;
+    renderLearning();
+    return;
+  }
+
+  /* --- My List tabs --- */
+  const mtab = target.closest("[data-mtab]");
+  if(mtab){
+    $$("#listTabs .tab").forEach(b => b.classList.remove("active"));
+    mtab.classList.add("active");
+    ui.listTab = mtab.dataset.mtab;
+    renderMyList();
+    return;
+  }
+
+  /* --- Related video --- */
+  const rel = target.closest("[data-rel]");
+  if(rel){ openVideo(rel.dataset.rel); return; }
+
+  /* --- Parents info rows --- */
+  const info = target.closest("[data-info]");
+  if(info){ openInfo(info.dataset.info); return; }
+
+  /* --- Settings toggles --- */
+  const toggle = target.closest("[data-toggle]");
+  if(toggle){
+    if(toggle.dataset.toggle === "theme"){
+      state.theme = state.theme === "dark" ? "light" : "dark";
+      applyTheme(); saveState(); renderParents();
+    }
+    if(toggle.dataset.toggle === "lang"){
+      state.lang = state.lang === "ur" ? "en" : "ur";
+      applyLanguage(); saveState(); renderParents(); renderHome();
+    }
+    return;
+  }
+
+  /* --- Daily goal cycling --- */
+  const goalBtn = target.closest("[data-goal]");
+  if(goalBtn){
+    const g = state.dailyGoal;
+    g.target = g.target >= 10 ? 1 : g.target + 1;
+    state.dailyGoal = g;
+    saveState(); renderParents(); renderHome();
+    toast(`Daily goal set to ${g.target} videos.`, "ok");
+    return;
+  }
+
+  /* --- Admin panel tabs --- */
+  const atab = target.closest("[data-atab]");
+  if(atab){
+    ui.adminTab = atab.dataset.atab;
+    if(ui.adminTab !== "add") ui.editId = null;
+    renderAdmin();
+    return;
+  }
+  const editBtn = target.closest("[data-edit]");
+  if(editBtn){
+    ui.editId = editBtn.dataset.edit;
+    ui.adminTab = "add";
+    renderAdmin();
+    return;
+  }
+  const delBtn = target.closest("[data-del]");
+  if(delBtn){ confirmDeleteVideo(delBtn.dataset.del); return; }
+
+  const delCat = target.closest("[data-delcat]");
+  if(delCat){
+    state.customCategories = (state.customCategories || []).filter(c => c.id !== delCat.dataset.delcat);
+    saveCustomCategories(); saveState(); renderAdmin(); renderHome();
+    toast("Custom category removed.", "ok");
+    return;
+  }
+});
+
+/* --- Static elements wired once DOM is ready --- */
+document.addEventListener("DOMContentLoaded", () => {
+  $("#themeBtn").addEventListener("click", () => {
+    state.theme = state.theme === "dark" ? "light" : "dark";
+    applyTheme(); saveState();
+    if($("#screen-parents").classList.contains("active")) renderParents();
+  });
+  $("#langBtn").addEventListener("click", () => {
+    state.lang = state.lang === "ur" ? "en" : "ur";
+    applyLanguage(); saveState();
+    renderHome();
+    if($("#screen-parents").classList.contains("active")) renderParents();
+  });
+
+  $("#heroStart").addEventListener("click", () => showScreen("learning"));
+
+  $("#globalSearch").addEventListener("input", (e) => {
+    const term = e.target.value.trim().toLowerCase();
+    const results = $("#searchResults");
+    const sections = $("#homeSections");
+    if(!term){
+      results.innerHTML = "";
+      sections.style.display = "";
+      return;
+    }
+    sections.style.display = "none";
+    const found = state.videos.filter(v =>
+      (v.title || "").toLowerCase().includes(term) ||
+      (v.titleUr || "").includes(term) ||
+      catName(v.category).toLowerCase().includes(term) ||
+      (v.description || "").toLowerCase().includes(term)
+    );
+    results.innerHTML = `
+      <div class="sec-head"><h2><span class="dot"></span>${found.length} result(s)</h2></div>
+      ${found.length
+        ? `<div class="v-grid">${found.map(v => videoCardHTML(v)).join("")}</div>`
+        : emptyState("🔍", t("noResults"), "Try searching for a letter, number or rhyme.")}`;
+  });
+
+  $("#exploreSearch").addEventListener("input", renderExplore);
+
+  $("#playerClose").addEventListener("click", closePlayer);
+  $("#playerFav").addEventListener("click", () => {
+    if(!ui.currentVideo) return;
+    const id = ui.currentVideo.id;
+    const idx = state.favorites.indexOf(id);
+    if(idx >= 0) state.favorites.splice(idx,1); else state.favorites.unshift(id);
+    saveState();
+    $("#playerFav").textContent = state.favorites.includes(id) ? "♥" : "♡";
+    $("#playerFav").style.color = state.favorites.includes(id) ? "#ff4d88" : "#fff";
+    renderHome(); renderMyList();
+  });
+  $("#btnRepeat").addEventListener("click", () => {
+    if(!ui.currentVideo) return;
+    const id = ui.currentVideo.youtubeId || extractYouTubeId(ui.currentVideo.youtubeUrl);
+    $("#playerFrame").innerHTML =
+      `<iframe src="${embedUrl(id, true)}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+    toast("Replaying video.", "info", 1600);
+  });
+  $("#btnNext").addEventListener("click", () => {
+    if(!ui.currentVideo) return;
+    const list = ui.currentList.length ? ui.currentList : state.videos;
+    const i = list.findIndex(v => v.id === ui.currentVideo.id);
+    if(i < 0 || list.length < 2){ toast("No next video available.", "info"); return; }
+    openVideo(list[(i + 1) % list.length].id);
+  });
+  $("#btnComplete").addEventListener("click", () => {
+    if(!ui.currentVideo) return;
+    state.progress[ui.currentVideo.id] = 100;
+    saveState();
+    $("#playerMeta").innerHTML = `<span>⏱ ${esc(ui.currentVideo.duration || "")}</span><span>100% watched</span><span>✅ Completed</span>`;
+    toast("Marked as completed! 🎉", "ok");
+    renderHome(); renderMyList();
+  });
+  $("#btnQuizFromPlayer").addEventListener("click", () => {
+    if(!ui.currentVideo) return;
+    const v = ui.currentVideo;
+    if(v.quiz && v.quiz.length){ startQuiz(v.id); }
+    else if(QUIZ_BANK[v.category]){ startQuiz(v.category); }
+    else { toast("No quiz available for this video yet.", "info"); }
+  });
+  $("#btnReadAloud").addEventListener("click", () => {
+    if(!ui.currentVideo) return;
+    const v = ui.currentVideo;
+    const text = (state.lang === "ur" && v.titleUr ? v.titleUr : v.title) + ". " + (v.description || "");
+    speak(text, state.lang === "ur" ? "ur" : "en");
+  });
+
+  /* Close modals when the backdrop is tapped */
+  $$(".modal").forEach(m => {
+    m.addEventListener("click", (e) => {
+      if(e.target === m){
+        if(m.id === "playerModal") closePlayer();
+        else m.classList.remove("open");
+      }
+    });
+  });
+});
+
+/* ===================== 21. BOOTSTRAP =================================== */
+async function boot(){
+  loadState();
+  state.customCategories = loadCustomCategories();
+  applyTheme();
+  applyLanguage();
+
+  /* If Firebase failed to initialize, show that immediately on Home. */
+  if(!fb.ready){
+    state.loadingVideos = false;
+    state.loadError = fb.error && fb.error.message
+      ? fb.error.message
+      : "Firebase could not be initialized. Check FIREBASE_CONFIG and reload.";
+    renderHome();
+    showScreen("home");
+    return;
+  }
+
+  /* Keep the admin session state in sync with Firebase Auth. */
+  onAuthStateChanged(fb.auth, (user) => {
+    state.isAdmin    = !!user;
+    state.adminEmail = user ? user.email : null;
+  });
+
+  /* First Firestore read. */
+  try{
+    const list = await fetchVideosFromFirestore();
+    state.videos = list;
+    state.loadingVideos = false;
+    state.loadError = null;
+    console.info(`[Boy Talk] Loaded ${list.length} video(s) from Firestore.`);
+  }catch(err){
+    console.error("[Boy Talk] Firestore initial read failed:", err);
+    state.loadingVideos = false;
+    state.loadError = err && err.message ? err.message : "Unknown Firestore error.";
+  }
+
+  renderHome();
+  showScreen("home");
+}
+
+/* Module scripts run after the DOM is parsed, so DOMContentLoaded has already
+   fired by the time we reach this line. Guard just in case. */
+if(document.readyState === "loading"){
+  document.addEventListener("DOMContentLoaded", boot);
+}else{
+  boot();
+}
+
+/* =========================================================================
+   FIRESTORE SECURITY RULES (copy into Firebase Console → Firestore → Rules)
+   -------------------------------------------------------------------------
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /videos/{videoId} {
+         allow read: if true;                    // public catalogue
+         allow write: if request.auth != null;   // signed-in admins only
+       }
+     }
+   }
+   -------------------------------------------------------------------------
+   STRONGER OPTION (recommended for production):
+   Set a custom claim "admin: true" on your admin user(s) with the Firebase
+   Admin SDK, then change the write rule to:
+
+       allow write: if request.auth != null
+                    && request.auth.token.admin == true;
+
+   This prevents ANY signed-in user from writing — only true admins can.
+   ========================================================================= */
+</script>
+</body>
+</html>
